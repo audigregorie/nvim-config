@@ -1,5 +1,5 @@
 const main = () => {
-  console.log("hurray");
+  console.log("Oh no a merge conflict");
 };
 
 main();
