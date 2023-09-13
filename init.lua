@@ -128,8 +128,7 @@ require("lazy").setup({
 	--   end,
 	-- },
 
-	-- Colorscheme Catccuppin
-
+	-- Colorscheme Catppuccin
 	-- { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
 
 	-- Colorscheme Electron
@@ -142,8 +141,8 @@ require("lazy").setup({
 		opts = {
 			options = {
 				icons_enabled = false,
-				-- theme = "onedark",
-				theme = "electron",
+				theme = "onedark",
+				-- theme = "electron",
 				component_separators = "|",
 				section_separators = "",
 			},
@@ -474,15 +473,29 @@ require("lazy").setup({
 	-- Lazygit
 	{
 		"kdheepak/lazygit.nvim",
-		-- optional for floating window border decoration
 		dependencies = {
+			"nvim-telescope/telescope.nvim",
 			"nvim-lua/plenary.nvim",
 		},
+		config = function()
+			require("telescope").load_extension("lazygit")
+		end,
 	},
 
-	-- Floatterm
+	-- Floaterm
 	{
 		"voldikss/vim-floaterm",
+	},
+
+	-- Toggleterm
+	{
+		"akinsho/toggleterm.nvim",
+		version = "",
+		config = true,
+	},
+
+	{
+		"xiyaowong/transparent.nvim",
 	},
 }, {})
 
@@ -744,6 +757,9 @@ vim.keymap.set("n", "<leader>ch", ":Cheatsheet<CR>")
 
 pcall(require("telescope").load_extension("tailiscope"))
 vim.keymap.set("n", "<leader>tw", ":Telescope tailiscope<CR>")
+
+pcall(require("telescope").load_extension("lazygit"))
+vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>")
 
 -- --------------------------------
 -- ----- Configure Treesitter -----
@@ -1141,6 +1157,7 @@ null_ls.setup({
 -- -------------------------------
 -- setup must be called before loading
 vim.cmd([[colorscheme electron]])
+-- vim.cmd([[colorscheme catppuccin]])
 
 -- ----------------------------------
 -- ----- Colorscheme Catccuppin -----
@@ -1176,7 +1193,74 @@ vim.keymap.set("n", "gR", function()
 	require("trouble").open("lsp_references")
 end)
 
--- -----------------------------
--- ----- Configure Lazygit -----
--- -----------------------------
-vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>")
+-- --------------------------------
+-- ----- Configure Toggleterm -----
+-- --------------------------------
+-- local toggleterm = require("toggleterm")
+--
+-- toggleterm.setup({
+-- 	-- size can be a number or function which is passed the current terminal
+-- 	size = 40,
+-- 	open_mapping = [[<c-\>]],
+-- 	hide_numbers = true, -- hide the number column in toggleterm buffers
+-- 	shade_filetypes = {},
+-- 	shade_terminals = true, -- NOTE: this option takes priority over highlights specified so if you specify Normal highlights you should set this to false
+-- 	shading_factor = 2, -- the percentage by which to lighten terminal background, default: -30 (gets multiplied by -3 if background is light)
+-- 	start_in_insert = true,
+-- 	insert_mappings = true, -- whether or not the open mapping applies in insert mode
+-- 	persist_size = true,
+-- 	direction = "float", -- 'vertical' | 'horizontal' | 'tab' | 'float'
+-- 	close_on_exit = true, -- close the terminal window when the process exits
+-- 	-- Change the default shell. Can be a string or a function returning a string
+-- 	shell = vim.o.shell,
+-- 	-- auto_scroll = true, -- automatically scroll to the bottom on terminal output
+-- 	-- This field is only relevant if direction is set to 'float'
+-- 	float_opts = {
+-- 		border = "curved", -- 'single' | 'double' | 'shadow' | 'curved' |
+-- 		-- like `size`, width and height can be a number or function which is passed the current terminal
+-- 		winblend = 0,
+-- 		highlights = {
+-- 			border = "Normal",
+-- 			background = "Normal",
+-- 		},
+-- 	},
+-- })
+--
+
+local toggleterm = require("toggleterm")
+
+toggleterm.setup({
+	-- size can be a number or function which is passed the current terminal
+	size = 40,
+	open_mapping = [[<c-\>]],
+	hide_numbers = true, -- hide the number column in toggleterm buffers
+	direction = "float", -- 'vertical' | 'horizontal' | 'tab' | 'float'
+	close_on_exit = true, -- close the terminal window when the process exits
+	float_opts = {
+		border = "curved", -- 'single' | 'double' | 'shadow' | 'curved' |
+	},
+})
+
+function _G.set_terminal_keymaps()
+	local opts = { buffer = 0 }
+	vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], opts)
+	vim.keymap.set("t", "jk", [[<C-\><C-n>]], opts)
+	vim.keymap.set("t", "kj", [[<C-\><C-n>]], opts)
+	vim.keymap.set("t", "<C-h>", [[<Cmd>wincmd h<CR>]], opts)
+	vim.keymap.set("t", "<C-j>", [[<Cmd>wincmd j<CR>]], opts)
+	vim.keymap.set("t", "<C-k>", [[<Cmd>wincmd k<CR>]], opts)
+	vim.keymap.set("t", "<C-l>", [[<Cmd>wincmd l<CR>]], opts)
+	vim.keymap.set("t", "<C-w>", [[<C-\><C-n><C-w>]], opts)
+end
+
+-- if you only want these mappings for toggle term use term://*toggleterm#* instead
+vim.cmd("autocmd! TermOpen term://* lua set_terminal_keymaps()")
+
+local Terminal = require("toggleterm.terminal").Terminal
+local lazygit = Terminal:new({ cmd = "lazygit", hidden = true })
+
+function _lazygit_toggle()
+	lazygit:toggle()
+end
+
+vim.api.nvim_set_keymap("n", "<leader>lg", "<cmd>lua _lazygit_toggle()<CR>", { noremap = true, silent = true })
