@@ -1,25 +1,20 @@
 --[[
 ===================================================
 ==================== Init File ====================
-===================================================
 --]]
 
--- ===================
--- ===== Globals =====
--- ===================
+-- ##### Globals ######
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
--- vimwiki
+-- # Vimwiki #
 vim.g.vimwiki_list = { { path = "~/vimwiki", syntax = "markdown", ext = ".md" } }
 vim.g.mkdp_echo_preview_url = 0
 
--- ===================
--- ===== Plugins =====
--- ===================
+-- ##### Plugins #####
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -38,14 +33,14 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 
-	-- Git related plugins
+	-- # Git related plugins #
 	"tpope/vim-fugitive",
 	"tpope/vim-rhubarb",
 
-	-- Detect tabstop and shiftwidth automatically
+	-- # Detect tabstop and shiftwidth automatically #
 	"tpope/vim-sleuth",
 
-	-- LSP
+	-- # LSP #
 	{
 		-- LSP Configuration & Plugins
 		"neovim/nvim-lspconfig",
@@ -63,7 +58,7 @@ require("lazy").setup({
 		},
 	},
 
-	-- Nvim-cmp
+	-- # Nvim-cmp #
 	{
 		-- Autocompletion
 		"hrsh7th/nvim-cmp",
@@ -80,9 +75,10 @@ require("lazy").setup({
 		},
 	},
 
-	-- Useful plugin to show you pending keybinds.
+	-- # Shows available keybindings #
 	{ "folke/which-key.nvim", opts = {} },
 
+	-- # Git Signs #
 	{
 		-- Adds git related signs to the gutter, as well as utilities for managing changes
 		"lewis6991/gitsigns.nvim",
@@ -118,22 +114,57 @@ require("lazy").setup({
 		},
 	},
 
-	-- Colorscheme Onedark
+	-- ## Colorschemes ##
+
+	-- # Onedark #
 	-- {
-	--   -- Theme inspired by Atom
-	--   'navarasu/onedark.nvim',
-	--   priority = 1000,
-	--   config = function()
-	--     vim.cmd.colorscheme 'onedark'
-	--   end,
+	-- 	-- Theme inspired by Atom
+	-- 	"navarasu/onedark.nvim",
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		vim.cmd.colorscheme("onedark")
+	-- 	end,
 	-- },
 
-	-- Colorscheme Catppuccin
-	-- { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+	-- # Onedarkpro #
+	-- {
+	-- 	"olimorris/onedarkpro.nvim",
+	-- 	priority = 1000, -- Ensure it loads first
+	-- 	config = function()
+	-- 		vim.cmd.colorscheme("onedark")
+	-- 	end,
+	-- },
 
-	-- Colorscheme Electron
-	{ "ivanlhz/vim-electron" },
+	-- # Electron #
+	{
+		"ivanlhz/vim-electron",
+		priority = 1000, -- Ensure it loads first
+		config = function()
+			vim.cmd.colorscheme("electron")
+		end,
+	},
 
+	-- # Tokyonight #
+	-- {
+	-- 	"folke/tokyonight.nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		vim.cmd.colorscheme("tokyonight")
+	-- 	end,
+	-- },
+
+	-- # Catppuccin #
+	-- {
+	-- 	"catppuccin/nvim",
+	-- 	name = "catppuccin",
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		vim.cmd.colorscheme("tokyonight")
+	-- 	end,
+	-- },
+
+	-- # Lualine #
 	{
 		-- Set lualine as statusline
 		"nvim-lualine/lualine.nvim",
@@ -141,14 +172,16 @@ require("lazy").setup({
 		opts = {
 			options = {
 				icons_enabled = false,
-				theme = "onedark",
+				-- theme = "tokyonight",
 				-- theme = "electron",
+				theme = "onedark",
 				component_separators = "|",
 				section_separators = "",
 			},
 		},
 	},
 
+	-- # Indent Blankline #
 	{
 		-- Add indentation guides even on blank lines
 		"lukas-reineke/indent-blankline.nvim",
@@ -160,11 +193,13 @@ require("lazy").setup({
 		},
 	},
 
+	-- # Comment #
 	-- "gc" to comment visual regions/lines
 	{ "numToStr/Comment.nvim", opts = {} },
 
-	-- Fuzzy Finder (files, lsp, etc)
+	-- # Telescope #
 	{
+		-- Fuzzy Finder (files, lsp, etc)
 		"nvim-telescope/telescope.nvim",
 		branch = "0.1.x",
 		dependencies = {
@@ -184,7 +219,7 @@ require("lazy").setup({
 		},
 	},
 
-	-- Treesitter
+	-- # Treesitter #
 	{
 		-- Highlight, edit, and navigate code
 		"nvim-treesitter/nvim-treesitter",
@@ -194,10 +229,10 @@ require("lazy").setup({
 		build = ":TSUpdate",
 	},
 
-	-- Debug
+	-- # Dap #
 	{
+		-- Debug
 		-- Shows how to use the DAP plugin to debug your code.
-		--
 		-- Primarily focused on configuring the debugger for Go, but can
 		-- be extended to other languages as well.
 		-- NOTE: Yes, you can install new plugins here!
@@ -279,24 +314,22 @@ require("lazy").setup({
 		end,
 	},
 
-	-- ==========================
-	-- ===== Custom Plugins =====
-	-- ==========================
+	-- ##### Custom Plugins #####
 
-	-- Telescope File Browser
+	-- # Telescope File Browser #
 	{
 		"nvim-telescope/telescope-file-browser.nvim",
 		dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
 	},
 
-	-- Autopairs
+	-- # Autopairs #
 	{
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
 		opts = {}, -- this is equalent to setup({}) function
 	},
 
-	-- Browser Bookmarks
+	-- # Browser Bookmarks #
 	{
 		"dhruvmanila/browser-bookmarks.nvim",
 		version = "*",
@@ -305,7 +338,7 @@ require("lazy").setup({
 		},
 	},
 
-	-- Cheatsheet
+	-- # Cheatsheet #
 	{
 		"doctorfree/cheatsheet.nvim",
 		event = "VeryLazy",
@@ -343,17 +376,20 @@ require("lazy").setup({
 		end,
 	},
 
-	-- Colorizer
+	-- # Colorizer #
 	{
 		"NvChad/nvim-colorizer.lua",
 		opts = {
 			user_default_options = {
 				tailwind = true,
+				-- mode = "foreground",
+				-- mode = "background",
+				mode = "virtualtext",
 			},
 		},
 	},
 
-	-- Neo-tree
+	-- # Neo-tree #
 	{
 		"nvim-neo-tree/neo-tree.nvim",
 		version = "*",
@@ -367,7 +403,7 @@ require("lazy").setup({
 		end,
 	},
 
-	-- Neoclip
+	-- # Neoclip #
 	{
 		"AckslD/nvim-neoclip.lua",
 		config = function()
@@ -375,12 +411,12 @@ require("lazy").setup({
 		end,
 	},
 
-	-- prettier
+	-- # Prettier #
 	{
 		"MunifTanjim/prettier.nvim",
 	},
 
-	-- Tailiscope, plugin for tailwind cheatsheet
+	-- # Tailiscope (plugin for tailwind cheatsheet) #
 	{
 		"danielvolchek/tailiscope.nvim",
 		-- If you have tailwind lsp you can setup on attach
@@ -389,7 +425,7 @@ require("lazy").setup({
 		--   vim.keymap.set("n", "<leader>fw", "<cmd>Telescope tailiscope<cr>")
 	},
 
-	-- Tailwindcss colorizer cmp
+	-- # Tailwindcss Colorizer Cmp #
 	{
 		"roobert/tailwindcss-colorizer-cmp.nvim",
 		dependencies = {
@@ -398,7 +434,7 @@ require("lazy").setup({
 		config = true,
 	},
 
-	-- trouble
+	-- # Trouble #
 	{
 		"folke/trouble.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -408,42 +444,44 @@ require("lazy").setup({
 		},
 	},
 
-	-- Vim surround
+	-- # Vim Surround #
 	{
 		-- Vim-surround provides mappings to easily delete, change and add such surroundings in pairs
 		-- ie. parentheses, brackets, quotes, XML tags, and more.
 		"tpope/vim-surround",
 	},
-	-- [ ysw' ] -- Surround a word with single quotes
+	--[[
+	[ ysw' ] -- Surround a word with single quotes
 
-	-- [ ys3w{ ] -- Surround 3 word with { Hello-World }
+	[ ys3w{ ] -- Surround 3 word with { Hello-World }
 
-	-- [ ds" ] -- Delete surrounding double quotes "
+	[ ds" ] -- Delete surrounding double quotes "
 
-	-- [ cs"' ] -- Change surrounding double quotes " to single quotes '
+	[ cs"' ] -- Change surrounding double quotes " to single quotes '
 
-	-- [ cs"' ] -- "Hello" -> 'Hello'
+	[ cs"' ] -- "Hello" -> 'Hello'
 
-	-- [ ds" ] -- "Hello" -> Hello
+	[ ds" ] -- "Hello" -> Hello
 
-	-- [ ysiw' ] -- Hello -> 'Hello'
+	[ ysiw' ] -- Hello -> 'Hello'
 
-	-- [ ysiw{ ] -- Hello -> { Hello } World
+	[ ysiw{ ] -- Hello -> { Hello } World
 
-	-- [ yss( ] -- Hello World -> ( Hello World )
+	[ yss( ] -- Hello World -> ( Hello World )
 
-	-- [ ysiw} ] -- Hello -> {Hello} World
+	[ ysiw} ] -- Hello -> {Hello} World
 
-	-- [ yss) ] -- Hello World -> (Hello World)
+	[ yss) ] -- Hello World -> (Hello World)
 
-	-- [ vfec{} + Esc p ] -- props.name -> {} -> {props.name}
+	[ vfec{} + Esc p ] -- props.name -> {} -> {props.name}
+	--]]
 
-	-- Vim-px-to-rem
+	-- # Vim px to rem #
 	{
 		"Oldenborg/vim-px-to-rem",
 	},
 
-	-- Null-ls nvim
+	-- # Null-ls #
 	{
 		"jose-elias-alvarez/null-ls.nvim",
 		dependencies = {
@@ -454,7 +492,7 @@ require("lazy").setup({
 		},
 	},
 
-	-- Mason Null-ls
+	-- # Mason Null-ls #
 	{
 		"jay-babu/mason-null-ls.nvim",
 		event = { "BufReadPre", "BufNewFile" },
@@ -464,13 +502,13 @@ require("lazy").setup({
 		},
 	},
 
-	-- Vim tmux navigator
+	-- # Vim Tmux Navigator #
 	{
 		"christoomey/vim-tmux-navigator",
 		lazy = false,
 	},
 
-	-- Lazygit
+	-- # Lazygit #
 	{
 		"kdheepak/lazygit.nvim",
 		dependencies = {
@@ -482,26 +520,117 @@ require("lazy").setup({
 		end,
 	},
 
-	-- Floaterm
+	-- # Floaterm #
 	{
 		"voldikss/vim-floaterm",
 	},
 
-	-- Toggleterm
+	-- # Toggleterm #
 	{
 		"akinsho/toggleterm.nvim",
 		version = "",
 		config = true,
 	},
 
+	-- # Transparent #
 	{
 		"xiyaowong/transparent.nvim",
 	},
+
+	-- # Telescope UI Select #
+	{
+		"nvim-telescope/telescope-ui-select.nvim",
+	},
+
+	-- # Firenvim #
+	{
+		-- nvim embedded in the browser
+		"glacambre/firenvim",
+
+		-- Lazy load firenvim
+		-- Explanation: https://github.com/folke/lazy.nvim/discussions/463#discussioncomment-4819297
+		lazy = not vim.g.started_by_firenvim,
+		build = function()
+			vim.fn["firenvim#install"](0)
+		end,
+	},
+
+	-- # Rest #
+	{
+		-- Rest api
+		"rest-nvim/rest.nvim",
+		requires = { "nvim-lua/plenary.nvim" },
+		config = function()
+			require("rest-nvim").setup({
+				-- Open request results in a horizontal split
+				result_split_horizontal = false,
+				-- Keep the http file buffer above|left when split horizontal|vertical
+				result_split_in_place = false,
+				-- Skip SSL verification, useful for unknown certificates
+				skip_ssl_verification = false,
+				-- Encode URL before making request
+				encode_url = true,
+				-- Highlight request on run
+				highlight = {
+					enabled = true,
+					timeout = 150,
+				},
+				result = {
+					-- toggle showing URL, HTTP info, headers at top the of result window
+					show_url = true,
+					-- show the generated curl command in case you want to launch
+					-- the same request via the terminal (can be verbose)
+					show_curl_command = false,
+					show_http_info = true,
+					show_headers = true,
+					-- executables or functions for formatting response body [optional]
+					-- set them to false if you want to disable them
+					formatters = {
+						json = "jq",
+						html = function(body)
+							return vim.fn.system({ "tidy", "-i", "-q", "-" }, body)
+						end,
+					},
+				},
+				-- Jump to request line on run
+				jump_to_request = false,
+				env_file = ".env",
+				custom_dynamic_variables = {},
+				yank_dry_run = true,
+			})
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = "http",
+				callback = function()
+					local buff = tonumber(vim.fn.expand("<abuf>"), 10)
+					vim.keymap.set("n", "<leader>rn", require("rest-nvim").run, { noremap = true, buffer = buff })
+					vim.keymap.set("n", "<leader>rl", require("rest-nvim").last, { noremap = true, buffer = buff })
+					vim.keymap.set("n", "<leader>rp", function()
+						require("rest-nvim").run(true)
+					end, { noremap = true, buffer = buff })
+				end,
+			})
+		end,
+	},
+
+	-- # Chatgpt #
+	-- {
+	-- Needs credit card
+	-- 	"jackMort/ChatGPT.nvim",
+	-- 	event = "VeryLazy",
+	-- 	config = function()
+	-- 		require("chatgpt").setup({
+	-- 			api_key_cmd = "pass show openai",
+	-- 		})
+	-- 	end,
+	-- 	dependencies = {
+	-- 		"MunifTanjim/nui.nvim",
+	-- 		"nvim-lua/plenary.nvim",
+	-- 		"nvim-telescope/telescope.nvim",
+	-- 	},
+	-- },
 }, {})
 
--- ===================
--- ===== Options =====
--- ===================
+-- ##### Options #####
 -- See :help options
 vim.opt.autoindent = true
 vim.opt.laststatus = 2
@@ -546,16 +675,14 @@ vim.opt.wrap = true -- display lines as one long line
 vim.opt.linebreak = true -- companion to wrap, don't split words
 vim.opt.scrolloff = 15 -- minimal number of screen lines to keep above and below the cursor
 vim.opt.sidescrolloff = 10 -- minimal number of screen columns either side of cursor if wrap is `false`
-vim.opt.guifont = "monospace:h17" -- the font used in graphical neovim applications
+-- vim.opt.guifont = "monospace:h17" -- the font used in graphical neovim applications
 vim.opt.whichwrap = "bs<>[]hl" -- which "horizontal" keys are allowed to travel to prev/next line
 -- vim.opt.guicursor = "" -- guicursor as a block instead of a line
 vim.opt.shortmess:append("c") -- don't give |ins-completion-menu| messages
 vim.opt.formatoptions:remove({ "c", "r", "o" }) -- don't insert the current comment leader automatically for...
 -- ...auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode.
 
--- ===================
--- ===== Keymaps =====
--- ===================
+-- ##### Keymaps #####
 -- See `:help vim.keymap.set()`
 -- Remap space key as leader key
 vim.g.mapleader = " "
@@ -624,9 +751,12 @@ vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "<leader>[", ":bprevious<CR>")
 vim.keymap.set("n", "<leader>]", ":bnext<CR>")
 
--- ====================
--- ===== Augroups =====
--- ====================
+vim.keymap.set("n", "gx", ":!open <c-r><c-a><CR>")
+
+-- Keep cursor in the center of the scrren
+vim.api.nvim_set_keymap("n", "<Leader>zz", [[:let &scrolloff=999-&scrolloff<CR>]], { noremap = true, silent = true })
+
+-- ##### Augroups #####
 -- Highlight on yank
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
@@ -638,18 +768,13 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	pattern = "*",
 })
 
--- =============================
--- ===== Configure Plugins =====
--- =============================
--- -------------------------------
--- ----- Configure Telescope -----
--- -------------------------------
+-- ##### Configure Plugins #####
+-- # Configure Telescope #
 -- See `:help telescope` and `:help telescope.setup()`
-
 require("telescope").setup({
 	defaults = {
 		layout_strategy = "vertical",
-		layout_config = { height = 0.95, width = 0.6 },
+		layout_config = { height = 0.95, width = 0.6, prompt_position = "top" },
 		mappings = {
 			i = {
 				["<C-u>"] = require("telescope.actions").preview_scrolling_up, -- scroll up in preview
@@ -692,9 +817,9 @@ require("telescope").setup({
 			mappings = {
 				i = {
 					["<C-n>"] = require("telescope._extensions.file_browser.actions").create,
+					["<C-t>"] = require("telescope._extensions.file_browser.actions").rename,
 					["<C-l>"] = require("telescope._extensions.file_browser.actions").change_cwd,
 					["<C-h>"] = require("telescope._extensions.file_browser.actions").goto_parent_dir,
-					["<C-,>"] = require("telescope._extensions.file_browser.actions").rename,
 					["<C-.>"] = require("telescope._extensions.file_browser.actions").toggle_hidden,
 					["<C-x>"] = require("telescope._extensions.file_browser.actions").remove,
 					-- ['<C-|>'] = require('telescope.actions').select_horizontal(), -- open selected file in a horizontal split
@@ -702,9 +827,9 @@ require("telescope").setup({
 				},
 				n = {
 					["<C-n>"] = require("telescope._extensions.file_browser.actions").create,
+					["<C-t>"] = require("telescope._extensions.file_browser.actions").rename,
 					["l"] = require("telescope._extensions.file_browser.actions").change_cwd,
 					["h"] = require("telescope._extensions.file_browser.actions").goto_parent_dir,
-					["<C-,>"] = require("telescope._extensions.file_browser.actions").rename,
 					["<C-.>"] = require("telescope._extensions.file_browser.actions").toggle_hidden,
 					["<C-x>"] = require("telescope._extensions.file_browser.actions").remove,
 					-- ['<C-|>'] = require('telescope.actions').select_horizontal(), -- open selected file in a horizontal split
@@ -716,11 +841,19 @@ require("telescope").setup({
 			selected_browser = "brave",
 			-- full_path = false,
 		},
+		["ui-select"] = {
+			require("telescope.themes").get_dropdown({
+				-- even more opts
+			}),
+		},
 	},
 })
 
 -- Enable telescope fzf native, if installed
 pcall(require("telescope").load_extension, "fzf")
+
+-- Enable telescope ui select
+pcall(require("telescope").load_extension("ui-select"))
 
 -- See `:help telescope.builtin`
 vim.keymap.set("n", "<leader>?", require("telescope.builtin").oldfiles, { desc = "[?] Find recently opened files" })
@@ -761,9 +894,7 @@ vim.keymap.set("n", "<leader>tw", ":Telescope tailiscope<CR>")
 pcall(require("telescope").load_extension("lazygit"))
 vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>")
 
--- --------------------------------
--- ----- Configure Treesitter -----
--- --------------------------------
+-- # Configure Treesitter #
 -- See `:help nvim-treesitter`
 require("nvim-treesitter.configs").setup({
 	autotag = {
@@ -780,6 +911,7 @@ require("nvim-treesitter.configs").setup({
 		"c",
 		"cpp",
 		"go",
+		"http",
 		"lua",
 		"python",
 		"rust",
@@ -859,9 +991,7 @@ vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnos
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
 
--- -------------------------
--- ----- Configure LSP -----
--- -------------------------
+-- # Configure LSP #
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
 	-- In this case, we create a function that lets us more easily define mappings specific
@@ -993,9 +1123,7 @@ mason_lspconfig.setup_handlers({
 	end,
 })
 
--- ------------------------------
--- ----- Configure Nvim-cmp -----
--- ------------------------------
+-- # Configure Nvim-cmp #
 -- See `:help cmp`
 local cmp = require("cmp")
 local luasnip = require("luasnip")
@@ -1049,11 +1177,9 @@ cmp.setup({
 	},
 })
 
--- ------------------------------
--- ----- Configure Prettier -----
--- ------------------------------
+-- # Configrue Prettier #
 local prettier = require("prettier")
-
+--
 prettier.setup({
 	bin = "prettier", -- or `'prettierd'` (v0.23.3+)
 	filetypes = {
@@ -1070,51 +1196,48 @@ prettier.setup({
 		"typescriptreact",
 		"yaml",
 	},
-	cli_options = {
-		arrow_parens = "always",
-		bracket_spacing = true,
-		bracket_same_line = true,
-		embedded_language_formatting = "auto",
-		end_of_line = "lf",
-		print_width = 100,
-		prose_wrap = "preserve",
-		quote_props = "as-needed",
-		semi = false,
-		single_attribute_per_line = false,
-		single_quote = true,
-		tab_width = 2,
-		trailing_comma = "all",
-		use_tabs = false,
-		vue_indent_script_and_style = false,
-		config_precedence = "prefer-file",
-	},
-	["null-ls"] = {
-		condition = function()
-			return prettier.config_exists({
-				-- if `false`, skips checking `package.json` for `"prettier"` key
-				check_package_json = true,
-			})
-		end,
-		runtime_condition = function(params)
-			-- return false to skip running prettier
-			return true
-		end,
-		timeout = 5000,
-	},
+	-- cli_options = {
+	-- 	arrow_parens = "always",
+	-- 	bracket_spacing = true,
+	-- 	bracket_same_line = true,
+	-- 	embedded_language_formatting = "auto",
+	-- 	html_whitespace_sensitivity = "css",
+	-- 	end_of_line = "lf",
+	-- 	print_width = 160,
+	-- 	prose_wrap = "preserve",
+	-- 	quote_props = "as-needed",
+	-- 	semi = false,
+	-- 	single_attribute_per_line = true,
+	-- 	single_quote = true,
+	-- 	tab_width = 2,
+	-- 	trailing_comma = "none",
+	-- 	use_tabs = false,
+	-- 	vue_indent_script_and_style = false,
+	-- 	config_precedence = "prefer-file",
+	-- },
+	-- 	["null-ls"] = {
+	-- 		condition = function()
+	-- 			return prettier.config_exists({
+	-- 				-- if `false`, skips checking `package.json` for `"prettier"` key
+	-- 				check_package_json = true,
+	-- 			})
+	-- 		end,
+	-- 		runtime_condition = function(params)
+	-- 			-- return false to skip running prettier
+	-- 			return true
+	-- 		end,
+	-- 		timeout = 5000,
+	-- 	},
 })
 
--- -----------------------------------
--- ----- Configure Mason null ls -----
--- -----------------------------------
--- DOES NOT WORK!!!
+-- # Configure Mason Null-ls #
+-- IS NOT WORKING!!!
 require("mason-null-ls").setup({
-	ensure_installed = { "prettier", "stylua", "jq" },
+	ensure_installed = { "prettierd", "stylua", "jq" },
 	automatic_installation = true,
 })
 
--- -----------------------------------
--- ----- Configure Null ls -----
--- -----------------------------------
+-- # Configure Null-ls #
 local null_ls = require("null-ls")
 
 local group = vim.api.nvim_create_augroup("lsp_format_on_save", { clear = false })
@@ -1128,7 +1251,7 @@ null_ls.setup({
 				vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
 			end, { buffer = bufnr, desc = "[lsp] format" })
 
-			-- format on save
+			-- 		-- format on save
 			vim.api.nvim_clear_autocmds({ buffer = bufnr, group = group })
 			vim.api.nvim_create_autocmd(event, {
 				buffer = bufnr,
@@ -1152,16 +1275,19 @@ null_ls.setup({
 	},
 })
 
--- -------------------------------
--- ----- Colorscheme loader ------
--- -------------------------------
+-- ## Colorscheme Loader ##
 -- setup must be called before loading
-vim.cmd([[colorscheme electron]])
+-- vim.cmd([[colorscheme onedark]])
+-- vim.cmd([[colorscheme tokyonight]])
+-- vim.cmd([[colorscheme electron]])
 -- vim.cmd([[colorscheme catppuccin]])
 
--- ----------------------------------
--- ----- Colorscheme Catccuppin -----
--- ----------------------------------
+-- # Configure Colorscheme Tokyonight #
+-- require("tokyonight").setup({
+--   style = "storm",
+-- })
+
+-- # Configure Colorscheme Catccuppin #
 -- require("catppuccin").setup({
 -- 	flavour = "frappe", -- latte, frappe, macchiato, mocha
 -- 	background = { -- :h background
@@ -1169,11 +1295,9 @@ vim.cmd([[colorscheme electron]])
 -- 		-- dark = "mocha",
 -- 	},
 -- 	transparent_background = false, -- disables setting the background color.
--- }),
+-- })
 
--- -----------------------------
--- ----- Configure Trouble -----
--- -----------------------------
+-- # Configure Trouble #
 vim.keymap.set("n", "<leader>xx", function()
 	require("trouble").open()
 end)
@@ -1193,40 +1317,7 @@ vim.keymap.set("n", "gR", function()
 	require("trouble").open("lsp_references")
 end)
 
--- --------------------------------
--- ----- Configure Toggleterm -----
--- --------------------------------
--- local toggleterm = require("toggleterm")
---
--- toggleterm.setup({
--- 	-- size can be a number or function which is passed the current terminal
--- 	size = 40,
--- 	open_mapping = [[<c-\>]],
--- 	hide_numbers = true, -- hide the number column in toggleterm buffers
--- 	shade_filetypes = {},
--- 	shade_terminals = true, -- NOTE: this option takes priority over highlights specified so if you specify Normal highlights you should set this to false
--- 	shading_factor = 2, -- the percentage by which to lighten terminal background, default: -30 (gets multiplied by -3 if background is light)
--- 	start_in_insert = true,
--- 	insert_mappings = true, -- whether or not the open mapping applies in insert mode
--- 	persist_size = true,
--- 	direction = "float", -- 'vertical' | 'horizontal' | 'tab' | 'float'
--- 	close_on_exit = true, -- close the terminal window when the process exits
--- 	-- Change the default shell. Can be a string or a function returning a string
--- 	shell = vim.o.shell,
--- 	-- auto_scroll = true, -- automatically scroll to the bottom on terminal output
--- 	-- This field is only relevant if direction is set to 'float'
--- 	float_opts = {
--- 		border = "curved", -- 'single' | 'double' | 'shadow' | 'curved' |
--- 		-- like `size`, width and height can be a number or function which is passed the current terminal
--- 		winblend = 0,
--- 		highlights = {
--- 			border = "Normal",
--- 			background = "Normal",
--- 		},
--- 	},
--- })
---
-
+-- # Configure Toggleterm #
 local toggleterm = require("toggleterm")
 
 toggleterm.setup({
@@ -1264,3 +1355,8 @@ function _lazygit_toggle()
 end
 
 vim.api.nvim_set_keymap("n", "<leader>lg", "<cmd>lua _lazygit_toggle()<CR>", { noremap = true, silent = true })
+
+-- # Configure Browser Bookmarks #
+-- vim.keymap.set("n", "<leader>bm", require("browser_bookmarks").select, {
+-- 	desc = "Fuzzy search browser bookmarks",
+-- })
