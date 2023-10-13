@@ -127,22 +127,22 @@ require("lazy").setup({
 	-- },
 
 	-- # Onedarkpro #
-	-- {
-	-- 	"olimorris/onedarkpro.nvim",
-	-- 	priority = 1000, -- Ensure it loads first
-	-- 	config = function()
-	-- 		vim.cmd.colorscheme("onedark")
-	-- 	end,
-	-- },
-
-	-- # Electron #
 	{
-		"ivanlhz/vim-electron",
+		"olimorris/onedarkpro.nvim",
 		priority = 1000, -- Ensure it loads first
 		config = function()
-			vim.cmd.colorscheme("electron")
+			vim.cmd.colorscheme("onedark")
 		end,
 	},
+
+	-- # Electron #
+	-- {
+	-- 	"ivanlhz/vim-electron",
+	-- 	priority = 1000, -- Ensure it loads first
+	-- 	config = function()
+	-- 		vim.cmd.colorscheme("electron")
+	-- 	end,
+	-- },
 
 	-- # Tokyonight #
 	-- {
@@ -479,6 +479,7 @@ require("lazy").setup({
 	-- # Vim px to rem #
 	{
 		"Oldenborg/vim-px-to-rem",
+		-- :Rem
 	},
 
 	-- # Null-ls #
@@ -611,6 +612,14 @@ require("lazy").setup({
 			})
 		end,
 	},
+	-- oil
+	-- (Edit file explorer in neovim buffer)
+	{
+		"stevearc/oil.nvim",
+		opts = {},
+		-- Optional dependencies
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+	},
 
 	-- # Chatgpt #
 	-- {
@@ -688,17 +697,17 @@ vim.opt.formatoptions:remove({ "c", "r", "o" }) -- don't insert the current comm
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
--- Remap write file (save)
-vim.keymap.set("n", "<leader>w", ":update<CR>")
-
--- Remap write file and quit
-vim.keymap.set("n", "<leader>wq", ":wq<CR>")
-
--- Remap quit
-vim.keymap.set("n", "<leader>q", ":q<CR>")
-
--- Remap force quit
-vim.keymap.set("n", "<leader>q!", ":q!<CR>")
+-- -- Remap write file (save)
+-- vim.keymap.set("n", ":w", ":update<CR>")
+--
+-- -- Remap write file and quit
+-- vim.keymap.set("n", ":wq", ":wq<CR>")
+--
+-- -- Remap quit
+-- vim.keymap.set("n", ":q", ":q<CR>")
+--
+-- -- Remap force quit
+-- vim.keymap.set("n", ":q!", ":q!<CR>")
 
 -- Remap to go into normal mode
 vim.keymap.set("i", "jk", "<ESC>") -- 'jk' to go into normal mode
@@ -1190,7 +1199,7 @@ prettier.setup({
 		"javascriptreact",
 		"json",
 		"less",
-		"markdown",
+		-- "markdown",
 		"scss",
 		"typescript",
 		"typescriptreact",
@@ -1240,40 +1249,45 @@ require("mason-null-ls").setup({
 -- # Configure Null-ls #
 local null_ls = require("null-ls")
 
-local group = vim.api.nvim_create_augroup("lsp_format_on_save", { clear = false })
-local event = "BufWritePre" -- or "BufWritePost"
-local async = event == "BufWritePost"
+-- local group = vim.api.nvim_create_augroup("lsp_format_on_save", { clear = false })
+-- local event = "BufWritePre" -- or "BufWritePost"
+-- local async = event == "BufWritePost"
 
 null_ls.setup({
-	on_attach = function(client, bufnr)
-		if client.supports_method("textDocument/formatting") then
-			vim.keymap.set("n", "<Leader>f", function()
-				vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
-			end, { buffer = bufnr, desc = "[lsp] format" })
-
-			-- 		-- format on save
-			vim.api.nvim_clear_autocmds({ buffer = bufnr, group = group })
-			vim.api.nvim_create_autocmd(event, {
-				buffer = bufnr,
-				group = group,
-				callback = function()
-					vim.lsp.buf.format({ bufnr = bufnr, async = async })
-				end,
-				desc = "[lsp] format on save",
-			})
-		end
-
-		if client.supports_method("textDocument/rangeFormatting") then
-			vim.keymap.set("x", "<Leader>f", function()
-				vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
-			end, { buffer = bufnr, desc = "[lsp] format" })
-		end
-	end,
+	-- on_attach = function(client, bufnr)
+	-- 	if client.supports_method("textDocument/formatting") then
+	-- 		vim.keymap.set("n", "<Leader>f", function()
+	-- 			vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
+	-- 		end, { buffer = bufnr, desc = "[lsp] format" })
+	--
+	-- 		-- 		-- format on save
+	-- 		vim.api.nvim_clear_autocmds({ buffer = bufnr, group = group })
+	-- 		vim.api.nvim_create_autocmd(event, {
+	-- 			buffer = bufnr,
+	-- 			group = group,
+	-- 			callback = function()
+	-- 				vim.lsp.buf.format({ bufnr = bufnr, async = async })
+	-- 			end,
+	-- 			desc = "[lsp] format on save",
+	-- 		})
+	-- 	end
+	--
+	-- 	if client.supports_method("textDocument/rangeFormatting") then
+	-- 		vim.keymap.set("x", "<Leader>f", function()
+	-- 			vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
+	-- 		end, { buffer = bufnr, desc = "[lsp] format" })
+	-- 	end
+	-- end,
 	sources = {
-		null_ls.builtins.formatting.prettier,
+		-- null_ls.builtins.formatting.prettier,
+		null_ls.builtins.formatting.prettier.with({
+			filetypes = { "html", "json", "yaml", "javascript", "typescript", "css", "sass", "scss" },
+		}),
 		null_ls.builtins.formatting.stylua,
 	},
 })
+-- Format on save
+vim.cmd([[autocmd BufWritePre * lua vim.lsp.buf.format()]])
 
 -- ## Colorscheme Loader ##
 -- setup must be called before loading
@@ -1357,6 +1371,50 @@ end
 vim.api.nvim_set_keymap("n", "<leader>lg", "<cmd>lua _lazygit_toggle()<CR>", { noremap = true, silent = true })
 
 -- # Configure Browser Bookmarks #
--- vim.keymap.set("n", "<leader>bm", require("browser_bookmarks").select, {
--- 	desc = "Fuzzy search browser bookmarks",
--- })
+vim.keymap.set("n", "<leader>bm", require("browser_bookmarks").select, {
+	desc = "Fuzzy search browser bookmarks",
+})
+
+-- # Configure Oil (File explorer) #
+require("oil").setup({
+	win_options = {
+		signcolumn = "yes",
+	},
+	-- keymaps = {
+	--    ["g?"] = "actions.show_help",
+	--    ["<CR>"] = "actions.select",
+	--    ["<C-s>"] = "actions.select_vsplit",
+	--    ["<C-h>"] = "actions.select_split",
+	--    ["<C-t>"] = "actions.select_tab",
+	--    ["<C-p>"] = "actions.preview",
+	--    ["<C-c>"] = "actions.close",
+	--    ["<C-l>"] = "actions.refresh",
+	--    ["-"] = "actions.parent",
+	--    ["_"] = "actions.open_cwd",
+	--    ["`"] = "actions.cd",
+	--    ["~"] = "actions.tcd",
+	--    ["gs"] = "actions.change_sort",
+	--    ["gx"] = "actions.open_external",
+	--    ["g."] = "actions.toggle_hidden",
+	--  },
+	keymaps = {
+		["g?"] = "actions.show_help",
+		["<CR>"] = "actions.select",
+		["<C-5>"] = "actions.select_vsplit",
+		["<C-7"] = "actions.select_split",
+		["<C-t>"] = "actions.select_tab",
+		["<C-p>"] = "actions.preview",
+		["<C-c>"] = "actions.close",
+		["<C-n>"] = "actions.refresh",
+		["<C-h>"] = "actions.parent",
+		["_"] = "actions.open_cwd",
+		["`"] = "actions.cd",
+		["~"] = "actions.tcd",
+		["gs"] = "actions.change_sort",
+		["gx"] = "actions.open_external",
+		["g."] = "actions.toggle_hidden",
+	},
+	use_default_keymaps = false,
+})
+vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+-- vim.keymap.set("n", "<C-m>", "<CMD>Oil<CR>", { desc = "Open parent directory" })
