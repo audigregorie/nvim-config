@@ -127,17 +127,18 @@ require("lazy").setup({
 	-- },
 
 	-- # Onedarkpro #
-	{
-		"olimorris/onedarkpro.nvim",
-		priority = 1000, -- Ensure it loads first
-		config = function()
-			vim.cmd.colorscheme("onedark")
-		end,
-	},
+	-- {
+	-- 	"olimorris/onedarkpro.nvim",
+	-- 	priority = 1000, -- Ensure it loads first
+	-- 	config = function()
+	-- 		vim.cmd.colorscheme("onedark")
+	-- 	end,
+	-- },
 
 	-- # Electron #
 	-- {
 	-- 	"ivanlhz/vim-electron",
+	-- 	name = "electron",
 	-- 	priority = 1000, -- Ensure it loads first
 	-- 	config = function()
 	-- 		vim.cmd.colorscheme("electron")
@@ -160,9 +161,29 @@ require("lazy").setup({
 	-- 	name = "catppuccin",
 	-- 	priority = 1000,
 	-- 	config = function()
-	-- 		vim.cmd.colorscheme("tokyonight")
+	-- 		vim.cmd.colorscheme("catppuccin")
 	-- 	end,
 	-- },
+
+	-- # Zephyr #
+	-- {
+	-- 	"nvimdev/zephyr-nvim",
+	-- 	name = "zephyr",
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		vim.cmd.colorscheme("zephyr")
+	-- 	end,
+	-- },
+
+	-- # Nightfox #
+	{
+		"EdenEast/nightfox.nvim",
+		name = "nightfox",
+		priority = 1000,
+		config = function()
+			vim.cmd.colorscheme("nightfox")
+		end,
+	},
 
 	-- # Lualine #
 	{
@@ -174,7 +195,8 @@ require("lazy").setup({
 				icons_enabled = false,
 				-- theme = "tokyonight",
 				-- theme = "electron",
-				theme = "onedark",
+				theme = "ayu_mirage",
+				-- theme = "onedark",
 				component_separators = "|",
 				section_separators = "",
 			},
@@ -182,16 +204,16 @@ require("lazy").setup({
 	},
 
 	-- # Indent Blankline #
-	{
-		-- Add indentation guides even on blank lines
-		"lukas-reineke/indent-blankline.nvim",
-		-- Enable `lukas-reineke/indent-blankline.nvim`
-		-- See `:help indent_blankline.txt`
-		opts = {
-			char = "┊",
-			show_trailing_blankline_indent = false,
-		},
-	},
+	-- {
+	-- 	-- Add indentation guides even on blank lines
+	-- 	"lukas-reineke/indent-blankline.nvim",
+	-- 	-- Enable `lukas-reineke/indent-blankline.nvim`
+	-- 	-- See `:help indent_blankline.txt`
+	-- 	opts = {
+	-- 		char = "┊",
+	-- 		show_trailing_blankline_indent = false,
+	-- 	},
+	-- },
 
 	-- # Comment #
 	-- "gc" to comment visual regions/lines
@@ -612,6 +634,7 @@ require("lazy").setup({
 			})
 		end,
 	},
+
 	-- oil
 	-- (Edit file explorer in neovim buffer)
 	{
@@ -619,6 +642,22 @@ require("lazy").setup({
 		opts = {},
 		-- Optional dependencies
 		dependencies = { "nvim-tree/nvim-web-devicons" },
+	},
+
+	-- diffview
+	-- (Review diff for all changed files)
+	{
+		"sindrets/diffview.nvim",
+	},
+
+	-- web icons
+	{
+		"nvim-tree/nvim-web-devicons",
+	},
+
+	-- nvim-tree
+	{
+		"nvim-tree/nvim-tree.lua",
 	},
 
 	-- # Chatgpt #
@@ -672,13 +711,13 @@ vim.opt.undofile = true -- enable persistent undo
 vim.opt.updatetime = 300 -- faster completion (4000ms default)
 vim.opt.writebackup = false -- if a file is being edited or was written to file with another program, it is not allowed to be edited
 vim.opt.expandtab = true -- convert tabs to spaces
-vim.opt.shiftwidth = 2 -- the number of spaces inserted for each indentation
-vim.opt.tabstop = 2 -- insert 2 spaces for a tab
+vim.opt.shiftwidth = 4 -- the number of spaces inserted for each indentation
+vim.opt.tabstop = 4 -- insert 2 spaces for a tab
 vim.opt.cursorline = true -- highlight the current line
 vim.opt.cursorlineopt = "number"
 vim.opt.number = true -- set numbered lines
 vim.opt.relativenumber = true -- set relative numbered lines
-vim.opt.numberwidth = 1 -- set number column width to 2 {default 4}
+vim.opt.numberwidth = 2 -- set number column width to 2 {default 4}
 vim.opt.signcolumn = "yes" -- always show the sign column, otherwise it would shift the text each time
 vim.opt.wrap = true -- display lines as one long line
 vim.opt.linebreak = true -- companion to wrap, don't split words
@@ -765,6 +804,11 @@ vim.keymap.set("n", "gx", ":!open <c-r><c-a><CR>")
 -- Keep cursor in the center of the scrren
 vim.api.nvim_set_keymap("n", "<Leader>zz", [[:let &scrolloff=999-&scrolloff<CR>]], { noremap = true, silent = true })
 
+-- View a list of all headings
+vim.keymap.set("n", "<leader>#", ":g^#<cr>")
+vim.keymap.set("n", "<leader>##", ":g/^##<cr>")
+vim.keymap.set("n", "<leader>###", ":g^###<cr>")
+
 -- ##### Augroups #####
 -- Highlight on yank
 -- See `:help vim.highlight.on_yank()`
@@ -783,7 +827,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 require("telescope").setup({
 	defaults = {
 		layout_strategy = "vertical",
-		layout_config = { height = 0.95, width = 0.6, prompt_position = "top" },
+		layout_config = { height = 0.95, width = 0.6, prompt_position = "top", mirror = true },
 		mappings = {
 			i = {
 				["<C-u>"] = require("telescope.actions").preview_scrolling_up, -- scroll up in preview
@@ -823,10 +867,14 @@ require("telescope").setup({
 	extensions = {
 		file_browser = {
 			-- theme = "ivy",
+			--
+			-- theme = "dropdown",
+			-- layout_strategy = "horizontal",
+			-- layout_config = { height = 0.7, width = 0.8, prompt_position = "bottom" },
 			mappings = {
 				i = {
 					["<C-n>"] = require("telescope._extensions.file_browser.actions").create,
-					["<C-t>"] = require("telescope._extensions.file_browser.actions").rename,
+					["<C-r>"] = require("telescope._extensions.file_browser.actions").rename,
 					["<C-l>"] = require("telescope._extensions.file_browser.actions").change_cwd,
 					["<C-h>"] = require("telescope._extensions.file_browser.actions").goto_parent_dir,
 					["<C-.>"] = require("telescope._extensions.file_browser.actions").toggle_hidden,
@@ -836,7 +884,7 @@ require("telescope").setup({
 				},
 				n = {
 					["<C-n>"] = require("telescope._extensions.file_browser.actions").create,
-					["<C-t>"] = require("telescope._extensions.file_browser.actions").rename,
+					["<C-r>"] = require("telescope._extensions.file_browser.actions").rename,
 					["l"] = require("telescope._extensions.file_browser.actions").change_cwd,
 					["h"] = require("telescope._extensions.file_browser.actions").goto_parent_dir,
 					["<C-.>"] = require("telescope._extensions.file_browser.actions").toggle_hidden,
@@ -857,6 +905,25 @@ require("telescope").setup({
 		},
 	},
 })
+
+-- ** Not working
+-- local config = {}
+-- local telescope_defaults = {}
+-- config.descriptions_order = {}
+-- local append = function(name, val, doc)
+-- 	telescope_defaults[name] = { val, doc }
+-- 	table.insert(config.descriptions_order, name)
+-- end
+--
+-- append(
+-- 	"initial_mode",
+-- 	"normal",
+-- 	[[
+--   Determines in which mode telescope starts. Valid Keys:
+--   `insert` and `normal`.
+--
+--   Default: "normal"]]
+-- )
 
 -- Enable telescope fzf native, if installed
 pcall(require("telescope").load_extension, "fzf")
@@ -884,6 +951,7 @@ vim.keymap.set("n", "<leader>sd", require("telescope.builtin").diagnostics, { de
 vim.keymap.set("n", "<leader>bb", require("telescope.builtin").buffers, { desc = "[S]earch [B]uffers" })
 vim.keymap.set("n", "<leader>ds", require("telescope.builtin").lsp_document_symbols, { desc = "[D]ocument [S]ymbols" })
 vim.keymap.set("n", "<leader>qf", require("telescope.builtin").quickfix, { desc = "[Q]uick [F]ix" })
+vim.keymap.set("n", "<leader>gb", require("telescope.builtin").git_bcommits, { desc = "[G]it [B]commits" })
 
 pcall(require("telescope").load_extension("file_browser"))
 vim.keymap.set("n", "<leader>ff", ":Telescope file_browser path=%:p:h select_buffer=true<CR>")
@@ -1024,7 +1092,8 @@ local on_attach = function(_, bufnr)
 	nmap("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
 
 	-- See `:help K` for why this keymap
-	nmap("K", vim.lsp.buf.hover, "Hover Documentation")
+	nmap("K", vim.lsp.buf.signature_help, "Signature Documentation")
+	nmap("<C-m>", vim.lsp.buf.hover, "Hover Documentation")
 	-- nmap("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")
 
 	-- Lesser used LSP functionality
@@ -1240,7 +1309,7 @@ prettier.setup({
 })
 
 -- # Configure Mason Null-ls #
--- IS NOT WORKING!!!
+-- ** Not Working
 require("mason-null-ls").setup({
 	ensure_installed = { "prettierd", "stylua", "jq" },
 	automatic_installation = true,
@@ -1379,6 +1448,7 @@ vim.keymap.set("n", "<leader>bm", require("browser_bookmarks").select, {
 require("oil").setup({
 	win_options = {
 		signcolumn = "yes",
+		foldcolumn = "1",
 	},
 	-- keymaps = {
 	--    ["g?"] = "actions.show_help",
@@ -1399,6 +1469,7 @@ require("oil").setup({
 	--  },
 	keymaps = {
 		["g?"] = "actions.show_help",
+		["<C-l>"] = "actions.select",
 		["<CR>"] = "actions.select",
 		["<C-5>"] = "actions.select_vsplit",
 		["<C-7"] = "actions.select_split",
@@ -1415,6 +1486,144 @@ require("oil").setup({
 		["g."] = "actions.toggle_hidden",
 	},
 	use_default_keymaps = false,
+	view_options = {
+		-- Show files and directories that start with "."
+		show_hidden = false,
+		-- This function defines what is considered a "hidden" file
+		is_hidden_file = function(name, bufnr)
+			return vim.startswith(name, ".")
+		end,
+		-- This function defines what will never be shown, even when `show_hidden` is set
+		is_always_hidden = function(name, bufnr)
+			return false
+		end,
+		sort = {
+			-- sort order can be "asc" or "desc"
+			-- see :help oil-columns to see which columns are sortable
+			{ "type", "asc" },
+			{ "name", "asc" },
+		},
+	},
+	-- Configuration for the floating window in oil.open_float
+	float = {
+		-- Padding around the floating window
+		padding = 2,
+		max_width = 80,
+		max_height = 40,
+		border = "rounded",
+		win_options = {
+			winblend = 0,
+		},
+		-- This is the config that will be passed to nvim_open_win.
+		-- Change values here to customize the layout
+		override = function(conf)
+			return conf
+		end,
+	},
+	preview = {
+		-- Width dimensions can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
+		-- min_width and max_width can be a single value or a list of mixed integer/float types.
+		-- max_width = {100, 0.8} means "the lesser of 100 columns or 80% of total"
+		max_width = 0.9,
+		-- min_width = {40, 0.4} means "the greater of 40 columns or 40% of total"
+		min_width = { 40, 0.4 },
+		-- optionally define an integer/float for the exact width of the preview window
+		width = 0.8,
+		-- Height dimensions can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
+		-- min_height and max_height can be a single value or a list of mixed integer/float types.
+		-- max_height = {80, 0.9} means "the lesser of 80 columns or 90% of total"
+		max_height = 0.9,
+		-- min_height = {5, 0.1} means "the greater of 5 columns or 10% of total"
+		min_height = { 5, 0.1 },
+		-- optionally define an integer/float for the exact height of the preview window
+		height = 0.5,
+		border = "rounded",
+		win_options = {
+			winblend = 0,
+		},
+	},
 })
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
--- vim.keymap.set("n", "<C-m>", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+-- vim.keymap.set("n", "-", require("oil").open_float, { desc = "Open [O]il [F]loat" })
+
+-- # Configure Lualine #
+local function getShitDone()
+	return [[Get. Shit. Done.]]
+end
+
+require("lualine").setup({
+	options = {
+		icons_enabled = true,
+		theme = "auto",
+		-- component_separators = { left = "", right = "" },
+		-- section_separators = { left = "", right = "" },
+		section_separators = { left = "", right = "" },
+		disabled_filetypes = {
+			statusline = {},
+			winbar = {},
+		},
+		ignore_focus = {},
+		always_divide_middle = false,
+		globalstatus = false,
+		refresh = {
+			statusline = 1000,
+			tabline = 1000,
+			winbar = 1000,
+		},
+	},
+	sections = {
+		lualine_a = { "mode" },
+		lualine_b = { "branch", "diff", "diagnostics" },
+		lualine_c = { "filename" },
+		lualine_x = { { getShitDone }, "encoding", "fileformat", "filetype" },
+		lualine_y = { "progress" },
+		lualine_z = { "location" },
+	},
+	inactive_sections = {
+		lualine_a = {},
+		lualine_b = {},
+		lualine_c = { "filename" },
+		lualine_x = { "location" },
+		lualine_y = {},
+		lualine_z = {},
+	},
+	tabline = {},
+	winbar = {},
+	inactive_winbar = {},
+	extensions = {},
+})
+
+-- # Configure Nvim-tree #
+-- disable netrw at the very start of your init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- set termguicolors to enable highlight groups
+vim.opt.termguicolors = true
+
+-- empty setup using defaults
+require("nvim-tree").setup()
+
+-- OR setup with some options
+require("nvim-tree").setup({
+	sort_by = "case_sensitive",
+	view = {
+		width = 50,
+		relativenumber = true,
+	},
+	actions = {
+
+		open_file = {
+			quit_on_open = true,
+		},
+	},
+	renderer = {
+		group_empty = true,
+		indent_width = 2,
+	},
+	filters = {
+		dotfiles = true,
+	},
+})
+
+vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>", { desc = "Open Nvim Tree" })
