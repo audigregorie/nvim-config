@@ -162,13 +162,13 @@ require("lazy").setup({
 				nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
 				nmap("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
 				nmap("gI", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
-				nmap("<leader>t", vim.lsp.buf.type_definition, "Type [D]efinition")
+				nmap("<leader>D", vim.lsp.buf.type_definition, "Type [D]efinition")
 				nmap("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
 				nmap("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
 
 				-- See `:help K` for why this keymap
 				nmap("K", vim.lsp.buf.signature_help, "Signature Documentation")
-				nmap("<leader>d", vim.lsp.buf.hover, "Hover Documentation")
+				nmap("<C-m>", vim.lsp.buf.hover, "Hover Documentation")
 				-- nmap("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")
 
 				-- Lesser used LSP functionality
@@ -306,45 +306,47 @@ require("lazy").setup({
 						luasnip.lsp_expand(args.body)
 					end,
 				},
-				completion = {
-					completeopt = "menu,menuone,noinsert",
-				},
 				mapping = cmp.mapping.preset.insert({
-					-- ["<C-n>"] = cmp.mapping.select_next_item(),
 					["<C-j>"] = cmp.mapping.select_next_item(),
-					-- ["<C-p>"] = cmp.mapping.select_prev_item(),
 					["<C-k>"] = cmp.mapping.select_prev_item(),
-					["<C-b>"] = cmp.mapping.scroll_docs(-4),
+					["<C-d>"] = cmp.mapping.scroll_docs(-4),
 					["<C-f>"] = cmp.mapping.scroll_docs(4),
 					["<C-Space>"] = cmp.mapping.complete({}),
 					["<CR>"] = cmp.mapping.confirm({
 						behavior = cmp.ConfirmBehavior.Replace,
 						select = true,
+
+						["<Tab>"] = cmp.mapping(function(fallback)
+							if cmp.visible() then
+								cmp.select_next_item()
+							elseif luasnip.expand_or_locally_jumpable() then
+								luasnip.expand_or_jump()
+							else
+								fallback()
+							end
+						end, { "i", "s" }),
+						["<S-Tab>"] = cmp.mapping(function(fallback)
+							if cmp.visible() then
+								cmp.select_prev_item()
+							elseif luasnip.locally_jumpable(-1) then
+								luasnip.jump(-1)
+							else
+								fallback()
+							end
+						end, { "i", "s" }),
 					}),
-					["<Tab>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_next_item()
-						elseif luasnip.expand_or_locally_jumpable() then
-							luasnip.expand_or_jump()
-						else
-							fallback()
-						end
-					end, { "i", "s" }),
-					["<S-Tab>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_prev_item()
-						elseif luasnip.locally_jumpable(-1) then
-							luasnip.jump(-1)
-						else
-							fallback()
-						end
-					end, { "i", "s" }),
+					sources = {
+						{ name = "nvim_lsp", priority = 1000 }, -- lsp
+						{ name = "luasnip",  priority = 750 }, -- snippets
+						{ name = "path",     priority = 250 }, -- file system
+						{ name = "buffer",   priority = 500 }, -- text within current buffer
+
+						-- { name = "nvim_lsp", priority = 1000 }, -- lsp
+						-- { name = "luasnip", priority = 750 }, -- snippets
+						-- { name = "buffer", priority = 500 }, -- text within current buffer
+						-- { name = "path", priority = 250 }, -- file system paths
+					},
 				}),
-				sources = {
-					{ name = "nvim_lsp" },
-					{ name = "luasnip" },
-					{ name = "path" },
-				},
 			})
 		end,
 	},
@@ -821,18 +823,18 @@ require("lazy").setup({
 	},
 
 	-- ## Neo-tree
-	-- {
-	-- 	"nvim-neo-tree/neo-tree.nvim",
-	-- 	version = "*",
-	-- 	dependencies = {
-	-- 		"nvim-lua/plenary.nvim",
-	-- 		"nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-	-- 		"MunifTanjim/nui.nvim",
-	-- 	},
-	-- 	config = function()
-	-- 		require("neo-tree").setup({})
-	-- 	end,
-	-- },
+	{
+		"nvim-neo-tree/neo-tree.nvim",
+		version = "*",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+			"MunifTanjim/nui.nvim",
+		},
+		config = function()
+			require("neo-tree").setup({})
+		end,
+	},
 
 	-- ## Neoclip
 	{
@@ -1154,6 +1156,7 @@ require("lazy").setup({
 
 	-- ## Nvim-tree
 	{
+
 		"nvim-tree/nvim-tree.lua",
 		config = function()
 			-- disable netrw at the very start of your init.lua
@@ -1168,6 +1171,7 @@ require("lazy").setup({
 					relativenumber = true,
 				},
 				actions = {
+
 					open_file = {
 						quit_on_open = true,
 					},
@@ -1181,42 +1185,42 @@ require("lazy").setup({
 					dotfiles = false,
 				},
 			})
+
+			-- -- Center a floating nvim-tree window
+			-- local HEIGHT_RATIO = 0.8 -- You can change this
+			-- local WIDTH_RATIO = 0.5 -- You can change this too
+			--
+			-- require("nvim-tree").setup({
+			-- 	view = {
+			-- 		float = {
+			-- 			enable = true,
+			-- 			open_win_config = function()
+			-- 				local screen_w = vim.opt.columns:get()
+			-- 				local screen_h = vim.opt.lines:get() - vim.opt.cmdheight:get()
+			-- 				local window_w = screen_w * WIDTH_RATIO
+			-- 				local window_h = screen_h * HEIGHT_RATIO
+			-- 				local window_w_int = math.floor(window_w)
+			-- 				local window_h_int = math.floor(window_h)
+			-- 				local center_x = (screen_w - window_w) / 2
+			-- 				local center_y = ((vim.opt.lines:get() - window_h) / 2) - vim.opt.cmdheight:get()
+			-- 				return {
+			-- 					border = "rounded",
+			-- 					relative = "editor",
+			-- 					row = center_y,
+			-- 					col = center_x,
+			-- 					width = window_w_int,
+			-- 					height = window_h_int,
+			-- 				}
+			-- 			end,
+			-- 		},
+			-- 		width = function()
+			-- 			return math.floor(vim.opt.columns:get() * WIDTH_RATIO)
+			-- 		end,
+			-- 	},
+			-- })
+
 			vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>", { desc = "Open Nvim Tree" })
 		end,
-
-		-- Center a floating nvim-tree window
-		-- local HEIGHT_RATIO = 0.8 -- You can change this
-		-- local WIDTH_RATIO = 0.5 -- You can change this too
-		--
-		-- require("nvim-tree").setup({
-		-- 	view = {
-		-- 		float = {
-		-- 			enable = true,
-		-- 			open_win_config = function()
-		-- 				local screen_w = vim.opt.columns:get()
-		-- 				local screen_h = vim.opt.lines:get() - vim.opt.cmdheight:get()
-		-- 				local window_w = screen_w * WIDTH_RATIO
-		-- 				local window_h = screen_h * HEIGHT_RATIO
-		-- 				local window_w_int = math.floor(window_w)
-		-- 				local window_h_int = math.floor(window_h)
-		-- 				local center_x = (screen_w - window_w) / 2
-		-- 				local center_y = ((vim.opt.lines:get() - window_h) / 2) - vim.opt.cmdheight:get()
-		-- 				return {
-		-- 					border = "rounded",
-		-- 					relative = "editor",
-		-- 					row = center_y,
-		-- 					col = center_x,
-		-- 					width = window_w_int,
-		-- 					height = window_h_int,
-		-- 				}
-		-- 			end,
-		-- 		},
-		-- 		relativenumber = true,
-		-- 		width = function()
-		-- 			return math.floor(vim.opt.columns:get() * WIDTH_RATIO)
-		-- 		end,
-		-- 	},
-		-- })
 	},
 
 	-- ## Lsp_lines
@@ -1251,31 +1255,6 @@ require("lazy").setup({
 		requires = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
 		config = function()
 			require("startup").setup({ theme = "startify" })
-		end,
-	},
-
-	-- MarkdownHeaders
-	{
-		"AntonVanAssche/md-headers.nvim",
-		version = "*",
-		lazy = false,
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-treesitter/nvim-treesitter",
-		},
-		config = function()
-			require("md-headers").setup({
-				width = 90,
-				height = 30,
-				borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
-				popup_auto_close = true,
-			})
-			-- Shorten function name.
-			local keymap = vim.keymap.set
-			-- Silent keymap option.
-			local opts = { silent = true }
-			-- Set keymap.
-			keymap("n", "<leader>mh", "<cmd>MarkdownHeaders<CR>", opts)
 		end,
 	},
 }, {})
@@ -1313,8 +1292,8 @@ vim.opt.undofile = true                          -- enable persistent undo
 vim.opt.updatetime = 300                         -- faster completion (4000ms default)
 vim.opt.writebackup = false                      -- if a file is being edited or was written to file with another program, it is not allowed to be edited
 vim.opt.expandtab = true                         -- convert tabs to spaces
-vim.opt.shiftwidth = 2                           -- the number of spaces inserted for each indentation
-vim.opt.tabstop = 2                              -- insert 2 spaces for a tab
+vim.opt.shiftwidth = 4                           -- the number of spaces inserted for each indentation
+vim.opt.tabstop = 4                              -- insert 2 spaces for a tab
 vim.opt.cursorline = true                        -- highlight the current line
 vim.opt.cursorlineopt = "number"
 vim.opt.number = true                            -- set numbered lines
