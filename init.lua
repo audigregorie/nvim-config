@@ -1,12 +1,16 @@
 --[[ Init File --]]
 
--- ##### Configure Globals ######
+-- ////# Configure Globals //////
 -- Set <space> as the leader key
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+vim.g.undotree_WindowLayout = 2
+vim.g.undotree_SplitWidth = 35
+vim.g.undotree_SetFocusWhenToggle = 1
+vim.g.undotree_DiffpanelHeight = 25
 
--- ##### Configure Plugins #####
+-- ////# Configure Plugins ////#
 -- Install package manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -22,8 +26,8 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-	-- ##### Colorschemes #####
-	-- ## Onedark
+	-- // CONFIGURE COLORSCHEMES //
+	-- // Onedark
 	-- {
 	-- 	-- Theme inspired by Atom
 	-- 	"navarasu/onedark.nvim",
@@ -33,7 +37,7 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 	--
-	-- ## Onedarkpro
+	-- // Onedarkpro
 	-- {
 	-- 	"olimorris/onedarkpro.nvim",
 	-- 	priority = 1000, -- Ensure it loads first
@@ -42,7 +46,7 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 
-	-- ## Electron
+	-- // Electron
 	-- {
 	-- 	"ivanlhz/vim-electron",
 	-- 	name = "electron",
@@ -52,17 +56,17 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 	--
-	-- ## Tokyonight
-	-- {
-	-- 	"folke/tokyonight.nvim",
-	-- 	lazy = false,
-	-- 	priority = 1000,
-	-- 	config = function()
-	-- 		vim.cmd.colorscheme("tokyonight")
-	-- 	end,
-	-- },
+	-- // Tokyonight
+	{
+		"folke/tokyonight.nvim",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			vim.cmd.colorscheme("tokyonight")
+		end,
+	},
 
-	-- ## Catppuccin
+	-- // Catppuccin
 	-- {
 	-- 	"catppuccin/nvim",
 	-- 	name = "catppuccin",
@@ -72,7 +76,7 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 
-	-- ## Zephyr
+	-- // Zephyr
 	-- {
 	-- 	"nvimdev/zephyr-nvim",
 	-- 	name = "zephyr",
@@ -82,7 +86,7 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 
-	-- ## Nightfox
+	-- // Nightfox
 	-- {
 	-- 	"EdenEast/nightfox.nvim",
 	-- 	name = "nightfox",
@@ -92,7 +96,7 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 
-	-- ## Vim-one
+	-- // Vim-one
 	-- {
 	-- 	"rakr/vim-one",
 	-- 	name = "one",
@@ -102,7 +106,7 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 
-	-- ## Palenight
+	-- // Palenight
 	-- {
 	-- 	"alexmozaidze/palenight.nvim",
 	-- 	name = "palenight",
@@ -112,24 +116,24 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 
-	-- ## Nordic
-	{
-		"AlexvZyl/nordic.nvim",
-		name = "nordic",
-		priority = 1000,
-		config = function()
-			vim.cmd.colorscheme("nordic")
-		end,
-	},
+	-- // Nordic
+	-- {
+	-- 	"AlexvZyl/nordic.nvim",
+	-- 	name = "nordic",
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		vim.cmd.colorscheme("nordic")
+	-- 	end,
+	-- },
 
-	-- ## Git related plugins
+	-- // Git related plugins
 	"tpope/vim-fugitive",
 	"tpope/vim-rhubarb",
 
-	-- ## Detect tabstop and shiftwidth automatically
+	-- // Detect tabstop and shiftwidth automatically
 	"tpope/vim-sleuth",
 
-	-- ## LSP
+	-- // LSP
 	{
 		-- LSP Configuration & Plugins
 		"neovim/nvim-lspconfig",
@@ -139,7 +143,7 @@ require("lazy").setup({
 			"williamboman/mason-lspconfig.nvim",
 			-- Useful status updates for LSP
 			-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-			{ "j-hui/fidget.nvim",       tag = "legacy", opts = {} },
+			{ "j-hui/fidget.nvim", tag = "legacy", opts = {} },
 			-- Additional lua configuration, makes nvim stuff amazing!
 			"folke/neodev.nvim",
 		},
@@ -162,7 +166,7 @@ require("lazy").setup({
 				nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
 				nmap("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
 				nmap("gI", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
-				nmap("<leader>t", vim.lsp.buf.type_definition, "Type [D]efinition")
+				nmap("<leader>td", vim.lsp.buf.type_definition, "Type [D]efinition")
 				nmap("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
 				nmap("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
 
@@ -280,7 +284,7 @@ require("lazy").setup({
 		end,
 	},
 
-	-- ## Nvim-cmp
+	-- // Nvim-cmp
 	{
 		-- Autocompletion
 		"hrsh7th/nvim-cmp",
@@ -349,10 +353,10 @@ require("lazy").setup({
 		end,
 	},
 
-	-- ## Shows available keybindings
-	{ "folke/which-key.nvim",  opts = {} },
+	-- // Shows available keybindings
+	{ "folke/which-key.nvim", opts = {} },
 
-	-- ## Git Signs
+	-- // Git Signs
 	{
 		-- Adds git related signs to the gutter, as well as utilities for managing changes
 		"lewis6991/gitsigns.nvim",
@@ -387,7 +391,7 @@ require("lazy").setup({
 		},
 	},
 
-	-- ## Lualine
+	-- // Lualine
 	{
 		-- Set lualine as statusline
 		"nvim-lualine/lualine.nvim",
@@ -446,7 +450,7 @@ require("lazy").setup({
 		end,
 	},
 
-	-- ## Indent Blankline
+	-- // Indent Blankline
 	{
 		-- Add indentation guides even on blank lines
 		"lukas-reineke/indent-blankline.nvim",
@@ -457,11 +461,16 @@ require("lazy").setup({
 		},
 	},
 
-	-- ## Comment
-	-- "gc" to comment visual regions/lines
-	{ "numToStr/Comment.nvim", opts = {} },
+	-- // Comment
+	-- { "numToStr/Comment.nvim", opts = {} },
 
-	-- ## Telescope
+	-- // Vim-commentary
+	-- "gcc" to comment out a line in one go
+	-- "gc" to comment visual regions/lines
+	-- "gcap" to comment out a paragraph
+	{ "tpope/vim-commentary" },
+
+	-- // Telescope
 	{
 		-- Fuzzy Finder (files, lsp, etc)
 		"nvim-telescope/telescope.nvim",
@@ -496,8 +505,8 @@ require("lazy").setup({
 							["<C-d>"] = require("telescope.actions").preview_scrolling_down, -- scroll down in preview
 							["<C-k>"] = require("telescope.actions").move_selection_previous, -- move to prev result
 							["<C-j>"] = require("telescope.actions").move_selection_next, -- move to next result
-							["<C-/>"] = require("telescope.actions").which_key,        -- which key cheatsheet
-							["<C-x>"] = require("telescope.actions").delete_buffer,    -- delete buffer
+							["<C-/>"] = require("telescope.actions").which_key, -- which key cheatsheet
+							["<C-x>"] = require("telescope.actions").delete_buffer, -- delete buffer
 							-- ['<C-|>'] = require('telescope.actions').select_horizontal(), -- open selected file in a horzontal split
 							-- ['<C-_>'] = require('telescope.actions').select_vertical(), -- open selected file in a vertical split
 						},
@@ -506,10 +515,10 @@ require("lazy").setup({
 							["<C-d>"] = require("telescope.actions").preview_scrolling_down, -- scroll down in preview
 							["k"] = require("telescope.actions").move_selection_previous, -- move to prev result
 							["j"] = require("telescope.actions").move_selection_next, -- move to next result
-							["<C-/>"] = require("telescope.actions").which_key,       -- which key cheatsheet
-							["<C-x>"] = require("telescope.actions").delete_buffer,   -- delete buffer
-							["gg"] = require("telescope.actions").move_to_top,        -- move to the top of the page
-							["G"] = require("telescope.actions").move_to_bottom,      -- move to the bottom of the page
+							["<C-/>"] = require("telescope.actions").which_key, -- which key cheatsheet
+							["<C-x>"] = require("telescope.actions").delete_buffer, -- delete buffer
+							["gg"] = require("telescope.actions").move_to_top, -- move to the top of the page
+							["G"] = require("telescope.actions").move_to_bottom, -- move to the bottom of the page
 							-- ['<C-|>'] = require('telescope.actions').select_horizontal(), -- open selected file in a horizontal split
 							-- ['<C-_>'] = require('telescope.actions').select_vertical(), -- open selected file in a vertical split
 						},
@@ -605,7 +614,7 @@ require("lazy").setup({
 				require("telescope.builtin").diagnostics,
 				{ desc = "[S]earch [D]iagnostics" }
 			)
-			vim.keymap.set("n", "<leader>bb", require("telescope.builtin").buffers, { desc = "[S]earch [B]uffers" })
+			vim.keymap.set("n", "<leader>sb", require("telescope.builtin").buffers, { desc = "[S]earch [B]uffers" })
 			vim.keymap.set(
 				"n",
 				"<leader>ds",
@@ -643,7 +652,7 @@ require("lazy").setup({
 		end,
 	},
 
-	-- ## Treesitter
+	-- // Treesitter
 	{
 		-- Highlight, edit, and navigate code
 		"nvim-treesitter/nvim-treesitter",
@@ -754,22 +763,21 @@ require("lazy").setup({
 		end,
 	},
 
-	-- ##### Custom Plugins #####
-
-	-- ## Telescope File Browser
+	-- // CUSTOM PLUGINS //
+	-- // Telescope File Browser
 	{
 		"nvim-telescope/telescope-file-browser.nvim",
 		dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
 	},
 
-	-- ## Autopairs
+	-- // Autopairs
 	{
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
 		opts = {}, -- this is equalent to setup({}) function
 	},
 
-	-- ## Cheatsheet
+	-- // Cheatsheet
 	{
 		"doctorfree/cheatsheet.nvim",
 		event = "VeryLazy",
@@ -807,7 +815,7 @@ require("lazy").setup({
 		end,
 	},
 
-	-- ## Colorizer
+	-- // Colorizer
 	{
 		"NvChad/nvim-colorizer.lua",
 		opts = {
@@ -820,7 +828,7 @@ require("lazy").setup({
 		},
 	},
 
-	-- ## Neo-tree
+	-- // Neo-tree
 	-- {
 	-- 	"nvim-neo-tree/neo-tree.nvim",
 	-- 	version = "*",
@@ -834,7 +842,7 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 
-	-- ## Neoclip
+	-- // Neoclip
 	{
 		"AckslD/nvim-neoclip.lua",
 		config = function()
@@ -842,7 +850,7 @@ require("lazy").setup({
 		end,
 	},
 
-	-- ## Prettier
+	-- // Prettier
 	-- {
 	-- 	"MunifTanjim/prettier.nvim",
 	-- 	config = function()
@@ -892,17 +900,17 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 
-	-- ## Tailiscope (plugin for tailwind cheatsheet)
+	-- // Tailiscope (plugin for tailwind cheatsheet)
 	"danielvolchek/tailiscope.nvim",
 
-	-- ## Tailwindcss Colorizer Cmp
+	-- // Tailwindcss Colorizer Cmp
 	{
 		"roobert/tailwindcss-colorizer-cmp.nvim",
 		dependencies = "hrsh7th/nvim-cmp",
 		config = true,
 	},
 
-	-- ## Trouble
+	-- // Trouble
 	{
 		"folke/trouble.nvim",
 		dependencies = "nvim-tree/nvim-web-devicons",
@@ -927,11 +935,12 @@ require("lazy").setup({
 		end),
 	},
 
-	-- ## Vim Surround
-	-- Vim-surround provides mappings to easily delete, change and add such surroundings in pairs
-	-- ie. parentheses, brackets, quotes, XML tags, and more.
-	"tpope/vim-surround",
-	--[[
+	-- // Vim Surround
+	{
+		-- Vim-surround provides mappings to easily delete, change and add such surroundings in pairs
+		-- ie. parentheses, brackets, quotes, XML tags, and more.
+		"tpope/vim-surround",
+		--[[
 	[ ysw' ] -- Surround a word with single quotes
 	[ ys3w{ ] -- Surround 3 word with { Hello-World }
 	[ ds" ] -- Delete surrounding double quotes "
@@ -945,12 +954,15 @@ require("lazy").setup({
 	[ yss) ] -- Hello World -> (Hello World)
 	[ vfec{} + Esc p ] -- props.name -> {} -> {props.name}
 	--]]
+	},
 
-	-- ## Vim px to rem
-	-- Change Px to Rem or Rem to Px ( :Rem or :Px )
-	"Oldenborg/vim-px-to-rem",
+	{
+		-- // Vim px to rem
+		-- Change Px to Rem or Rem to Px ( :Rem or :Px )
+		"Oldenborg/vim-px-to-rem",
+	},
 
-	-- ## Null-ls
+	-- // Null-ls
 	{
 		"jose-elias-alvarez/null-ls.nvim",
 		dependencies = {
@@ -1003,7 +1015,7 @@ require("lazy").setup({
 		end,
 	},
 
-	-- ## Mason Null-ls
+	-- // Mason Null-ls
 	{
 		"jay-babu/mason-null-ls.nvim",
 		event = { "BufReadPre", "BufNewFile" },
@@ -1020,13 +1032,13 @@ require("lazy").setup({
 		end,
 	},
 
-	-- ## Vim Tmux Navigator
+	-- // Vim Tmux Navigator
 	{
 		"christoomey/vim-tmux-navigator",
 		lazy = false,
 	},
 
-	-- ## Lazygit
+	-- // Lazygit
 	{
 		"kdheepak/lazygit.nvim",
 		dependencies = {
@@ -1038,10 +1050,10 @@ require("lazy").setup({
 		end,
 	},
 
-	-- ## Floaterm
+	-- // Floaterm
 	"voldikss/vim-floaterm",
 
-	-- ## Toggleterm
+	-- // Toggleterm
 	{
 		"akinsho/toggleterm.nvim",
 		version = "",
@@ -1077,13 +1089,13 @@ require("lazy").setup({
 		end,
 	},
 
-	-- ## Transparent
+	-- // Transparent
 	"xiyaowong/transparent.nvim",
 
-	-- ## Telescope UI Select
+	-- // Telescope UI Select
 	"nvim-telescope/telescope-ui-select.nvim",
 
-	-- ## Firenvim
+	-- // Firenvim
 	{
 		-- nvim embedded in the browser
 		"glacambre/firenvim",
@@ -1095,7 +1107,7 @@ require("lazy").setup({
 		end,
 	},
 
-	-- ## Rest
+	--  // Rest
 	{
 		-- Rest api
 		"rest-nvim/rest.nvim",
@@ -1152,7 +1164,7 @@ require("lazy").setup({
 		end,
 	},
 
-	-- ## Nvim-tree
+	-- // Nvim-tree
 	{
 		"nvim-tree/nvim-tree.lua",
 		config = function()
@@ -1162,6 +1174,9 @@ require("lazy").setup({
 
 			-- Standard left positioned nvim-tree window
 			require("nvim-tree").setup({
+				diagnostics = {
+					enable = true,
+				},
 				sort_by = "case_sensitive",
 				view = {
 					width = 50,
@@ -1219,7 +1234,7 @@ require("lazy").setup({
 		-- })
 	},
 
-	-- ## Lsp_lines
+	-- // Lsp_lines
 	-- Shows errors
 	-- {
 	-- 	"https://git.sr.ht/~whynothugo/lsp_lines.nvim",
@@ -1228,7 +1243,7 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 
-	-- ## Chatgpt
+	-- // Chatgpt
 	-- {
 	-- Needs credit card
 	-- 	"jackMort/ChatGPT.nvim",
@@ -1245,16 +1260,16 @@ require("lazy").setup({
 	-- 	},
 	-- },
 
-	-- ## Startup
-	{
-		"startup-nvim/startup.nvim",
-		requires = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
-		config = function()
-			require("startup").setup({ theme = "startify" })
-		end,
-	},
+	-- // Startup
+	-- {
+	-- 	"startup-nvim/startup.nvim",
+	-- 	requires = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
+	-- 	config = function()
+	-- 		require("startup").setup({ theme = "startify" })
+	-- 	end,
+	-- },
 
-	-- MarkdownHeaders
+	-- // MarkdownHeaders
 	{
 		"AntonVanAssche/md-headers.nvim",
 		version = "*",
@@ -1278,61 +1293,73 @@ require("lazy").setup({
 			keymap("n", "<leader>mh", "<cmd>MarkdownHeaders<CR>", opts)
 		end,
 	},
+
+	-- // Undo Tree
+	{
+		"mbbill/undotree",
+	},
+
+	-- // Harpoon
+	{
+		"ThePrimeagen/harpoon",
+		branch = "harpoon2",
+		requires = { { "nvim-lua/plenary.nvim" } },
+	},
 }, {})
 
--- ##### Configure Options #####
+-- // CONFIGURE OPTIONS //
 -- See :help options
 vim.opt.autoindent = true
 vim.opt.laststatus = 2
 vim.opt.shell = "zsh"
 -- vim.opt.title = true
 vim.opt.backspace = { "indent", "eol", "start" } -- allows <backspace> to function as we expect
-vim.opt.backup = false                           -- creates a backup file
-vim.opt.clipboard = "unnamedplus"                -- allows neovim to access the system clipboard
-vim.opt.cmdheight = 0                            -- more space in the neovim command line for displaying messages
-vim.opt.completeopt = { "menuone", "noselect" }  -- mostly just for cmp
-vim.opt.conceallevel = 0                         -- so that `` is visible in markdown files
+vim.opt.backup = false -- creates a backup file
+vim.opt.clipboard = "unnamedplus" -- allows neovim to access the system clipboard
+vim.opt.cmdheight = 0 -- more space in the neovim command line for displaying messages
+vim.opt.completeopt = { "menuone", "noselect" } -- mostly just for cmp
+vim.opt.conceallevel = 0 -- so that `` is visible in markdown files
 -- vim.opt.fileencoding = "UTF-8"                   -- the encoding written to a file
-vim.opt.fillchars = "eob: "                      -- Remove "~" from empty lines
-vim.opt.hlsearch = true                          -- highlight all matches on previous search pattern
-vim.opt.ignorecase = true                        -- ignore case in search patterns
-vim.opt.iskeyword:append("-")                    -- hyphenated words recognized by searches
-vim.opt.mouse = "a"                              -- allow the mouse to be used in neovim
-vim.opt.pumheight = 10                           -- pop up menu height
-vim.opt.showmode = false                         -- hide -- NORMAL --  -- INSERT --, mode
-vim.opt.showtabline = 0                          -- always show tabs
+vim.opt.fillchars = "eob: " -- Remove "~" from empty lines
+vim.opt.hlsearch = true -- highlight all matches on previous search pattern
+vim.opt.ignorecase = true -- ignore case in search patterns
+vim.opt.iskeyword:append("-") -- hyphenated words recognized by searches
+vim.opt.mouse = "a" -- allow the mouse to be used in neovim
+vim.opt.pumheight = 10 -- pop up menu height
+vim.opt.showmode = false -- hide -- NORMAL --  -- INSERT --, mode
+vim.opt.showtabline = 0 -- always show tabs
 vim.opt.background = "dark"
-vim.opt.smartcase = true                         -- smart case
-vim.opt.smartindent = true                       -- make indenting smarter again
-vim.opt.splitbelow = true                        -- force all horizontal splits to go below current window
-vim.opt.splitright = true                        -- force all vertical splits to go to the right of current window
-vim.opt.swapfile = false                         -- creates a swapfile
-vim.opt.termguicolors = true                     -- set termguicolors to enable highlight groups
-vim.opt.timeoutlen = 300                         -- time to wait for a mapped sequence to complete (in milliseconds)
-vim.opt.undofile = true                          -- enable persistent undo
-vim.opt.updatetime = 300                         -- faster completion (4000ms default)
-vim.opt.writebackup = false                      -- if a file is being edited or was written to file with another program, it is not allowed to be edited
-vim.opt.expandtab = true                         -- convert tabs to spaces
-vim.opt.shiftwidth = 2                           -- the number of spaces inserted for each indentation
-vim.opt.tabstop = 2                              -- insert 2 spaces for a tab
-vim.opt.cursorline = true                        -- highlight the current line
+vim.opt.smartcase = true -- smart case
+vim.opt.smartindent = true -- make indenting smarter again
+vim.opt.splitbelow = true -- force all horizontal splits to go below current window
+vim.opt.splitright = true -- force all vertical splits to go to the right of current window
+vim.opt.swapfile = false -- creates a swapfile
+vim.opt.termguicolors = true -- set termguicolors to enable highlight groups
+vim.opt.timeoutlen = 300 -- time to wait for a mapped sequence to complete (in milliseconds)
+vim.opt.undofile = true -- enable persistent undo
+vim.opt.updatetime = 300 -- faster completion (4000ms default)
+vim.opt.writebackup = false -- if a file is being edited or was written to file with another program, it is not allowed to be edited
+vim.opt.expandtab = true -- convert tabs to spaces
+vim.opt.shiftwidth = 2 -- the number of spaces inserted for each indentation
+vim.opt.tabstop = 2 -- insert 2 spaces for a tab
+vim.opt.cursorline = true -- highlight the current line
 vim.opt.cursorlineopt = "number"
-vim.opt.number = true                            -- set numbered lines
-vim.opt.relativenumber = true                    -- set relative numbered lines
-vim.opt.numberwidth = 2                          -- set number column width to 2 {default 4}
-vim.opt.signcolumn = "yes"                       -- always show the sign column, otherwise it would shift the text each time
-vim.opt.wrap = true                              -- display lines as one long line
-vim.opt.linebreak = true                         -- companion to wrap, don't split words
-vim.opt.scrolloff = 15                           -- minimal number of screen lines to keep above and below the cursor
-vim.opt.sidescrolloff = 10                       -- minimal number of screen columns either side of cursor if wrap is `false`
+vim.opt.number = true -- set numbered lines
+vim.opt.relativenumber = true -- set relative numbered lines
+vim.opt.numberwidth = 2 -- set number column width to 2 {default 4}
+vim.opt.signcolumn = "yes" -- always show the sign column, otherwise it would shift the text each time
+vim.opt.wrap = true -- display lines as one long line
+vim.opt.linebreak = true -- companion to wrap, don't split words
+vim.opt.scrolloff = 15 -- minimal number of screen lines to keep above and below the cursor
+vim.opt.sidescrolloff = 10 -- minimal number of screen columns either side of cursor if wrap is `false`
 -- vim.opt.guifont = "monospace:h17" -- the font used in graphical neovim applications
-vim.opt.whichwrap = "bs<>[]hl"                   -- which "horizontal" keys are allowed to travel to prev/next line
+vim.opt.whichwrap = "bs<>[]hl" -- which "horizontal" keys are allowed to travel to prev/next line
 -- vim.opt.guicursor = "" -- guicursor as a block instead of a line
-vim.opt.shortmess:append("c")                    -- don't give |ins-completion-menu| messages
-vim.opt.formatoptions:remove({ "c", "r", "o" })  -- don't insert the current comment leader automatically for...
+vim.opt.shortmess:append("c") -- don't give |ins-completion-menu| messages
+vim.opt.formatoptions:remove({ "c", "r", "o" }) -- don't insert the current comment leader automatically for...
 -- ...auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode.
 
--- ##### Configure Keymaps #####
+-- // CONFIGURE KEYMAPS //
 -- See `:help vim.keymap.set()`
 
 -- -- Remap write file (save)
@@ -1405,10 +1432,16 @@ vim.keymap.set("n", "gx", ":!open <c-r><c-a><CR>")
 
 -- View a list of all headings
 vim.keymap.set("n", "<leader>#", ":g^#<cr>")
-vim.keymap.set("n", "<leader>##", ":g/^##<cr>")
-vim.keymap.set("n", "<leader>###", ":g^###<cr>")
+vim.keymap.set("n", "<leader>//", ":g/^//<cr>")
+vim.keymap.set("n", "<leader>//#", ":g^//#<cr>")
 
--- ##### Configure Augroups #####
+-- Toggle undotree
+vim.keymap.set("n", "<leader>t", vim.cmd.UndotreeToggle)
+
+-- Toggle between previous file and current file
+vim.keymap.set("n", "<leader>b", "<c-^>")
+
+-- // CONFIGURE AUGROUPS //
 -- Highlight on yank
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
@@ -1420,5 +1453,5 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	pattern = "*",
 })
 
--- ????? Configure Nvim-dap ?????
+-- // CONFIGURE NVIM_DAP //
 -- Debugger
