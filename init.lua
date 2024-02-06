@@ -189,13 +189,24 @@ require("lazy").setup({
 				end, { desc = "Format current buffer with LSP" })
 			end
 
+			-- Change the Diagnostic symbols in the sign column (gutter)
+			-- (not in youtube nvim video)
+			local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
+			for type, icon in pairs(signs) do
+				local hl = "DiagnosticSign" .. type
+				vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+			end
+
 			--  Add any additional override configuration in the following tables. They will be passed to
 			--  the `settings` field of the server config. You must look up that documentation yourself.
 			--
 			--  If you want to override the default filetypes that your language server will attach to you can
 			--  define the property 'filetypes' to the map in question.
 			local servers = {
-				angularls = {},
+				angularls = {
+					cmd = { "ngserver", "--stdio", "--tsProbeLocations", "", "--ngProbeLocations", "" },
+					filetypes = { "typescript", "html", "typescriptreact", "typescript.tsx" },
+				},
 				cssls = {
 					settings = {
 						css = {
@@ -253,7 +264,17 @@ require("lazy").setup({
 						},
 					},
 				},
-				tsserver = {},
+				tsserver = {
+					cmd = { "typescript-language-server", "--stdio" },
+					filetypes = {
+						"javascript",
+						"javascriptreact",
+						"javascript.jsx",
+						"typescript",
+						"typescriptreact",
+						"typescript.tsx",
+					},
+				},
 				vimls = {},
 			}
 
@@ -1174,14 +1195,31 @@ require("lazy").setup({
 
 			-- Standard left positioned nvim-tree window
 			require("nvim-tree").setup({
-				diagnostics = {
-					enable = true,
-				},
 				sort_by = "case_sensitive",
 				view = {
 					width = 50,
 					relativenumber = true,
+					side = "left",
+					signcolumn = "yes",
 				},
+				diagnostics = {
+					enable = true,
+					show_on_dirs = true,
+					icons = {
+						hint = "",
+						info = "",
+						warning = "",
+						error = "",
+					},
+				},
+				log = {
+					enable = true,
+					truncate = true,
+					types = {
+						diagnostics = true,
+					},
+				},
+
 				actions = {
 					open_file = {
 						quit_on_open = true,
@@ -1300,11 +1338,11 @@ require("lazy").setup({
 	},
 
 	-- // Harpoon
-	{
-		"ThePrimeagen/harpoon",
-		branch = "harpoon2",
-		requires = { { "nvim-lua/plenary.nvim" } },
-	},
+	-- {
+	-- 	"ThePrimeagen/harpoon",
+	-- 	branch = "harpoon2",
+	-- 	requires = { { "nvim-lua/plenary.nvim" } },
+	-- },
 }, {})
 
 -- // CONFIGURE OPTIONS //
@@ -1320,7 +1358,7 @@ vim.opt.cmdheight = 0 -- more space in the neovim command line for displaying me
 vim.opt.completeopt = { "menuone", "noselect" } -- mostly just for cmp
 vim.opt.conceallevel = 0 -- so that `` is visible in markdown files
 -- vim.opt.fileencoding = "UTF-8"                   -- the encoding written to a file
-vim.opt.fillchars = "eob: " -- Remove "~" from empty lines
+-- vim.opt.fillchars = "eob: "                      -- Remove "~" from empty lines
 vim.opt.hlsearch = true -- highlight all matches on previous search pattern
 vim.opt.ignorecase = true -- ignore case in search patterns
 vim.opt.iskeyword:append("-") -- hyphenated words recognized by searches
@@ -1361,19 +1399,6 @@ vim.opt.formatoptions:remove({ "c", "r", "o" }) -- don't insert the current comm
 
 -- // CONFIGURE KEYMAPS //
 -- See `:help vim.keymap.set()`
-
--- -- Remap write file (save)
--- vim.keymap.set("n", ":w", ":update<CR>")
---
--- -- Remap write file and quit
--- vim.keymap.set("n", ":wq", ":wq<CR>")
---
--- -- Remap quit
--- vim.keymap.set("n", ":q", ":q<CR>")
---
--- -- Remap force quit
--- vim.keymap.set("n", ":q!", ":q!<CR>")
-
 -- Remap to go into normal mode
 vim.keymap.set("i", "jk", "<ESC>")
 vim.keymap.set("i", "kj", "<ESC>")
