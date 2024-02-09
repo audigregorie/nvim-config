@@ -143,7 +143,7 @@ require("lazy").setup({
 			"williamboman/mason-lspconfig.nvim",
 			-- Useful status updates for LSP
 			-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-			{ "j-hui/fidget.nvim", tag = "legacy", opts = {} },
+			{ "j-hui/fidget.nvim",       tag = "legacy", opts = {} },
 			-- Additional lua configuration, makes nvim stuff amazing!
 			"folke/neodev.nvim",
 		},
@@ -369,6 +369,7 @@ require("lazy").setup({
 					{ name = "nvim_lsp" },
 					{ name = "luasnip" },
 					{ name = "path" },
+					{ name = "buffer" },
 				},
 			})
 		end,
@@ -424,7 +425,7 @@ require("lazy").setup({
 		},
 		config = function()
 			local function getShitDone()
-				return [[Get. Shit. Done.]]
+				return [[Get Shit Done.]]
 			end
 
 			require("lualine").setup({
@@ -472,15 +473,16 @@ require("lazy").setup({
 	},
 
 	-- // Indent Blankline
-	{
-		-- Add indentation guides even on blank lines
-		"lukas-reineke/indent-blankline.nvim",
-		-- Enable `lukas-reineke/indent-blankline.nvim`
-		opts = {
-			char = "┊",
-			show_trailing_blankline_indent = false,
-		},
-	},
+	-- {
+	-- 	-- Add indentation guides even on blank lines
+	-- 	"lukas-reineke/indent-blankline.nvim",
+	-- 	-- Enable `lukas-reineke/indent-blankline.nvim`
+	-- 	opts = {
+	-- 		-- char = "┊",
+	-- 		char = "│",
+	-- 		show_trailing_blankline_indent = false,
+	-- 	},
+	-- },
 
 	-- // Comment
 	-- { "numToStr/Comment.nvim", opts = {} },
@@ -779,7 +781,7 @@ require("lazy").setup({
 			-- Diagnostic keymaps
 			vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic message" })
 			vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
-			vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
+			vim.keymap.set("n", "<leader>r", vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
 			vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
 		end,
 	},
@@ -876,7 +878,7 @@ require("lazy").setup({
 	-- 	"MunifTanjim/prettier.nvim",
 	-- 	config = function()
 	-- 		local prettier = require("prettier")
-	--
+
 	-- 		prettier.setup({
 	-- 			bin = "prettier", -- or `'prettierd'` (v0.23.3+)
 	-- 			filetypes = {
@@ -901,7 +903,7 @@ require("lazy").setup({
 	-- 				semi = false,
 	-- 				single_attribute_per_line = false,
 	-- 				single_quote = true,
-	-- 				tab_width = 4,
+	-- 				tab_width = 2,
 	-- 				trailing_comma = "all",
 	-- 			},
 	-- 			["null-ls"] = {
@@ -994,41 +996,48 @@ require("lazy").setup({
 		config = function()
 			local null_ls = require("null-ls")
 
-			-- local group = vim.api.nvim_create_augroup("lsp_format_on_save", { clear = false })
-			-- local event = "BufWritePre" -- or "BufWritePost"
-			-- local async = event == "BufWritePost"
+			local group = vim.api.nvim_create_augroup("lsp_format_on_save", { clear = false })
+			local event = "BufWritePre" -- or "BufWritePost"
+			local async = event == "BufWritePost"
 
 			null_ls.setup({
-				-- on_attach = function(client, bufnr)
-				-- 	if client.supports_method("textDocument/formatting") then
-				-- 		vim.keymap.set("n", "<Leader>f", function()
-				-- 			vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
-				-- 		end, { buffer = bufnr, desc = "[lsp] format" })
-				--
-				-- 		-- 		-- format on save
-				-- 		vim.api.nvim_clear_autocmds({ buffer = bufnr, group = group })
-				-- 		vim.api.nvim_create_autocmd(event, {
-				-- 			buffer = bufnr,
-				-- 			group = group,
-				-- 			callback = function()
-				-- 				vim.lsp.buf.format({ bufnr = bufnr, async = async })
-				-- 			end,
-				-- 			desc = "[lsp] format on save",
-				-- 		})
-				-- 	end
-				--
-				-- 	if client.supports_method("textDocument/rangeFormatting") then
-				-- 		vim.keymap.set("x", "<Leader>f", function()
-				-- 			vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
-				-- 		end, { buffer = bufnr, desc = "[lsp] format" })
-				-- 	end
-				-- end,
+				on_attach = function(client, bufnr)
+					if client.supports_method("textDocument/formatting") then
+						vim.keymap.set("n", "<Leader>f", function()
+							vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
+						end, { buffer = bufnr, desc = "[lsp] format" })
+
+						-- 		-- format on save
+						vim.api.nvim_clear_autocmds({ buffer = bufnr, group = group })
+						vim.api.nvim_create_autocmd(event, {
+							buffer = bufnr,
+							group = group,
+							callback = function()
+								vim.lsp.buf.format({ bufnr = bufnr, async = async })
+							end,
+							desc = "[lsp] format on save",
+						})
+					end
+
+					if client.supports_method("textDocument/rangeFormatting") then
+						vim.keymap.set("x", "<Leader>f", function()
+							vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
+						end, { buffer = bufnr, desc = "[lsp] format" })
+					end
+				end,
+				-- sources = {
+				-- 	-- null_ls.builtins.formatting.prettier,
+				-- 	null_ls.builtins.formatting.prettier.with({
+				-- 		filetypes = { "html", "json", "yaml", "javascript", "typescript", "css", "sass", "scss" },
+				-- 	}),
+				-- 	null_ls.builtins.formatting.stylua,
+				-- },
 				sources = {
-					-- null_ls.builtins.formatting.prettier,
 					null_ls.builtins.formatting.prettier.with({
-						filetypes = { "html", "json", "yaml", "javascript", "typescript", "css", "sass", "scss" },
+						condition = function(utils)
+							return utils.root_has_file({ ".prettierrc" })
+						end,
 					}),
-					null_ls.builtins.formatting.stylua,
 				},
 			})
 			-- Format on save
@@ -1332,6 +1341,87 @@ require("lazy").setup({
 		end,
 	},
 
+	-- Nvim-dap Debugger
+	{
+		-- NOTE: Yes, you can install new plugins here!
+		'mfussenegger/nvim-dap',
+		-- NOTE: And you can specify dependencies as well
+		dependencies = {
+			-- Creates a beautiful debugger UI
+			'rcarriga/nvim-dap-ui',
+
+			-- Installs the debug adapters for you
+			'williamboman/mason.nvim',
+			'jay-babu/mason-nvim-dap.nvim',
+
+			-- Add your own debuggers here
+			'leoluz/nvim-dap-go',
+		},
+		config = function()
+			local dap = require 'dap'
+			local dapui = require 'dapui'
+
+			require('mason-nvim-dap').setup {
+				-- Makes a best effort to setup the various debuggers with
+				-- reasonable debug configurations
+				automatic_setup = true,
+
+				-- You can provide additional configuration to the handlers,
+				-- see mason-nvim-dap README for more information
+				handlers = {},
+
+				-- You'll need to check that you have the required things installed
+				-- online, please don't ask me how to install them :)
+				ensure_installed = {
+					-- Update this to ensure that you have the debuggers for the langs you want
+					'delve',
+				},
+			}
+
+			-- Basic debugging keymaps, feel free to change to your liking!
+			vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug: Start/Continue' })
+			vim.keymap.set('n', '<F1>', dap.step_into, { desc = 'Debug: Step Into' })
+			vim.keymap.set('n', '<F2>', dap.step_over, { desc = 'Debug: Step Over' })
+			vim.keymap.set('n', '<F3>', dap.step_out, { desc = 'Debug: Step Out' })
+			vim.keymap.set('n', '<leader>b', dap.toggle_breakpoint, { desc = 'Debug: Toggle Breakpoint' })
+			vim.keymap.set('n', '<leader>B', function()
+				dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+			end, { desc = 'Debug: Set Breakpoint' })
+
+			-- Dap UI setup
+			-- For more information, see |:help nvim-dap-ui|
+			dapui.setup {
+				-- Set icons to characters that are more likely to work in every terminal.
+				--    Feel free to remove or use ones that you like more! :)
+				--    Don't feel like these are good choices.
+				icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
+				controls = {
+					icons = {
+						pause = '⏸',
+						play = '▶',
+						step_into = '⏎',
+						step_over = '⏭',
+						step_out = '⏮',
+						step_back = 'b',
+						run_last = '▶▶',
+						terminate = '⏹',
+						disconnect = '⏏',
+					},
+				},
+			}
+
+			-- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
+			vim.keymap.set('n', '<F7>', dapui.toggle, { desc = 'Debug: See last session result.' })
+
+			dap.listeners.after.event_initialized['dapui_config'] = dapui.open
+			dap.listeners.before.event_terminated['dapui_config'] = dapui.close
+			dap.listeners.before.event_exited['dapui_config'] = dapui.close
+
+			-- Install golang specific config
+			require('dap-go').setup()
+		end,
+	},
+
 	-- // Undo Tree
 	{
 		"mbbill/undotree",
@@ -1352,48 +1442,54 @@ vim.opt.laststatus = 2
 vim.opt.shell = "zsh"
 -- vim.opt.title = true
 vim.opt.backspace = { "indent", "eol", "start" } -- allows <backspace> to function as we expect
-vim.opt.backup = false -- creates a backup file
-vim.opt.clipboard = "unnamedplus" -- allows neovim to access the system clipboard
-vim.opt.cmdheight = 0 -- more space in the neovim command line for displaying messages
-vim.opt.completeopt = { "menuone", "noselect" } -- mostly just for cmp
-vim.opt.conceallevel = 0 -- so that `` is visible in markdown files
+vim.opt.backup = false                           -- creates a backup file
+vim.opt.clipboard = "unnamedplus"                -- allows neovim to access the system clipboard
+vim.opt.cmdheight = 0                            -- more space in the neovim command line for displaying messages
+vim.opt.completeopt = { "menuone", "noselect" }  -- mostly just for cmp
+vim.opt.conceallevel = 0                         -- so that `` is visible in markdown files
 -- vim.opt.fileencoding = "UTF-8"                   -- the encoding written to a file
 -- vim.opt.fillchars = "eob: "                      -- Remove "~" from empty lines
-vim.opt.hlsearch = true -- highlight all matches on previous search pattern
-vim.opt.ignorecase = true -- ignore case in search patterns
+vim.opt.hlsearch = true       -- highlight all matches on previous search pattern
+vim.opt.ignorecase = true     -- ignore case in search patterns
 vim.opt.iskeyword:append("-") -- hyphenated words recognized by searches
-vim.opt.mouse = "a" -- allow the mouse to be used in neovim
-vim.opt.pumheight = 10 -- pop up menu height
-vim.opt.showmode = false -- hide -- NORMAL --  -- INSERT --, mode
-vim.opt.showtabline = 0 -- always show tabs
+vim.opt.mouse = "a"           -- allow the mouse to be used in neovim
+vim.opt.pumheight = 10        -- pop up menu height
+vim.opt.showmode = false      -- hide -- NORMAL --  -- INSERT --, mode
+vim.opt.showtabline = 0       -- always show tabs
 vim.opt.background = "dark"
-vim.opt.smartcase = true -- smart case
-vim.opt.smartindent = true -- make indenting smarter again
-vim.opt.splitbelow = true -- force all horizontal splits to go below current window
-vim.opt.splitright = true -- force all vertical splits to go to the right of current window
-vim.opt.swapfile = false -- creates a swapfile
-vim.opt.termguicolors = true -- set termguicolors to enable highlight groups
-vim.opt.timeoutlen = 300 -- time to wait for a mapped sequence to complete (in milliseconds)
-vim.opt.undofile = true -- enable persistent undo
-vim.opt.updatetime = 300 -- faster completion (4000ms default)
-vim.opt.writebackup = false -- if a file is being edited or was written to file with another program, it is not allowed to be edited
-vim.opt.expandtab = true -- convert tabs to spaces
-vim.opt.shiftwidth = 2 -- the number of spaces inserted for each indentation
-vim.opt.tabstop = 2 -- insert 2 spaces for a tab
-vim.opt.cursorline = true -- highlight the current line
+vim.opt.smartcase = true      -- smart case
+vim.opt.smartindent = true    -- make indenting smarter again
+vim.opt.splitbelow = true     -- force all horizontal splits to go below current window
+vim.opt.splitright = true     -- force all vertical splits to go to the right of current window
+vim.opt.swapfile = false      -- creates a swapfile
+vim.opt.termguicolors = true  -- set termguicolors to enable highlight groups
+vim.opt.timeoutlen = 300      -- time to wait for a mapped sequence to complete (in milliseconds)
+vim.opt.undofile = true       -- enable persistent undo
+vim.opt.updatetime = 300      -- faster completion (4000ms default)
+vim.opt.writebackup = false   -- if a file is being edited or was written to file with another program, it is not allowed to be edited
+vim.opt.expandtab = true      -- convert tabs to spaces
+vim.opt.shiftwidth = 4        -- the number of spaces inserted for each indentation
+vim.opt.tabstop = 4           -- insert 2 spaces for a tab
+vim.opt.cursorline = true     -- highlight the current line
 vim.opt.cursorlineopt = "number"
-vim.opt.number = true -- set numbered lines
+vim.opt.number = true         -- set numbered lines
 vim.opt.relativenumber = true -- set relative numbered lines
-vim.opt.numberwidth = 2 -- set number column width to 2 {default 4}
-vim.opt.signcolumn = "yes" -- always show the sign column, otherwise it would shift the text each time
-vim.opt.wrap = true -- display lines as one long line
-vim.opt.linebreak = true -- companion to wrap, don't split words
-vim.opt.scrolloff = 15 -- minimal number of screen lines to keep above and below the cursor
-vim.opt.sidescrolloff = 10 -- minimal number of screen columns either side of cursor if wrap is `false`
+-- vim.opt.numberwidth = 2                         -- set number column width to 2 {default 4}
+vim.opt.signcolumn = "yes"    -- always show the sign column, otherwise it would shift the text each time
+vim.opt.wrap = true           -- display lines as one long line
+
+-- " Indents word-wrapped lines as much as the 'parent' line
+vim.opt.breakindent = true
+-- " Ensures word-wrap does not split words
+-- vim.opt.formatoptions = 1
+vim.opt.lbr = true
+vim.opt.linebreak = true                        -- companion to wrap, don't split words
+vim.opt.scrolloff = 8                           -- minimal number of screen lines to keep above and below the cursor
+vim.opt.sidescrolloff = 10                      -- minimal number of screen columns either side of cursor if wrap is `false`
 -- vim.opt.guifont = "monospace:h17" -- the font used in graphical neovim applications
-vim.opt.whichwrap = "bs<>[]hl" -- which "horizontal" keys are allowed to travel to prev/next line
+vim.opt.whichwrap = "bs<>[]hl"                  -- which "horizontal" keys are allowed to travel to prev/next line
 -- vim.opt.guicursor = "" -- guicursor as a block instead of a line
-vim.opt.shortmess:append("c") -- don't give |ins-completion-menu| messages
+vim.opt.shortmess:append("c")                   -- don't give |ins-completion-menu| messages
 vim.opt.formatoptions:remove({ "c", "r", "o" }) -- don't insert the current comment leader automatically for...
 -- ...auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode.
 
@@ -1464,7 +1560,8 @@ vim.keymap.set("n", "<leader>//#", ":g^//#<cr>")
 vim.keymap.set("n", "<leader>t", vim.cmd.UndotreeToggle)
 
 -- Toggle between previous file and current file
-vim.keymap.set("n", "<leader>b", "<c-^>")
+-- vim.keymap.set("n", "<leader>b", "<c-^>")
+vim.keymap.set("n", "<leader>.", "<c-^>")
 
 -- // CONFIGURE AUGROUPS //
 -- Highlight on yank
@@ -1480,222 +1577,3 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- // CONFIGURE NVIM_DAP //
 -- Debugger
-
--- {
--- 	"neovim/nvim-lspconfig",
--- 	event = { "BufReadPre", "BufNewFile" },
--- 	dependencies = {
--- 		"hrsh7th/cmp-nvim-lsp",
--- 		{ "antosha417/nvim-lsp-file-operations", config = true },
--- 	},
--- 	config = function()
--- 		-- import lspconfig plugin
--- 		local lspconfig = require("lspconfig")
-
--- 		-- import cmp-nvim-lsp plugin
--- 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
-
--- 		local keymap = vim.keymap -- for conciseness
-
--- 		local opts = { noremap = true, silent = true }
--- 		local on_attach = function(client, bufnr)
--- 			opts.buffer = bufnr
-
--- 			-- set keybinds
--- 			opts.desc = "Show LSP references"
--- 			keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts) -- show definition, references
-
--- 			opts.desc = "Go to declaration"
--- 			keymap.set("n", "gD", vim.lsp.buf.declaration, opts) -- go to declaration
-
--- 			opts.desc = "Show LSP definitions"
--- 			keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts) -- show lsp definitions
-
--- 			opts.desc = "Show LSP implementations"
--- 			keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts) -- show lsp implementations
-
--- 			opts.desc = "Show LSP type definitions"
--- 			keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts) -- show lsp type definitions
-
--- 			opts.desc = "See available code actions"
--- 			keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts) -- see available code actions, in visual mode will apply to selection
-
--- 			opts.desc = "Smart rename"
--- 			keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts) -- smart rename
-
--- 			opts.desc = "Show buffer diagnostics"
--- 			keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts) -- show  diagnostics for file
-
--- 			opts.desc = "Show line diagnostics"
--- 			keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts) -- show diagnostics for line
-
--- 			opts.desc = "Go to previous diagnostic"
--- 			keymap.set("n", "[d", vim.diagnostic.goto_prev, opts) -- jump to previous diagnostic in buffer
-
--- 			opts.desc = "Go to next diagnostic"
--- 			keymap.set("n", "]d", vim.diagnostic.goto_next, opts) -- jump to next diagnostic in buffer
-
--- 			opts.desc = "Show documentation for what is under cursor"
--- 			keymap.set("n", "K", vim.lsp.buf.hover, opts) -- show documentation for what is under cursor
-
--- 			opts.desc = "Restart LSP"
--- 			keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
--- 		end
-
--- 		-- used to enable autocompletion (assign to every lsp server config)
--- 		local capabilities = cmp_nvim_lsp.default_capabilities()
-
--- 		-- Change the Diagnostic symbols in the sign column (gutter)
--- 		-- (not in youtube nvim video)
--- 		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
--- 		for type, icon in pairs(signs) do
--- 			local hl = "DiagnosticSign" .. type
--- 			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
--- 		end
-
--- 		-- configure html server
--- 		lspconfig["html"].setup({
--- 			capabilities = capabilities,
--- 			on_attach = on_attach,
--- 		})
-
--- 		-- configure typescript server with plugin
--- 		lspconfig["tsserver"].setup({
--- 			capabilities = capabilities,
--- 			on_attach = on_attach,
--- 		})
-
--- 		-- configure css server
--- 		lspconfig["cssls"].setup({
--- 			capabilities = capabilities,
--- 			on_attach = on_attach,
--- 		})
-
--- 		-- configure tailwindcss server
--- 		lspconfig["tailwindcss"].setup({
--- 			capabilities = capabilities,
--- 			on_attach = on_attach,
--- 		})
-
--- 		-- configure svelte server
--- 		lspconfig["svelte"].setup({
--- 			capabilities = capabilities,
--- 			on_attach = function(client, bufnr)
--- 				on_attach(client, bufnr)
-
--- 				vim.api.nvim_create_autocmd("BufWritePost", {
--- 					pattern = { "*.js", "*.ts" },
--- 					callback = function(ctx)
--- 						if client.name == "svelte" then
--- 							client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.file })
--- 						end
--- 					end,
--- 				})
--- 			end,
--- 		})
-
--- 		-- configure prisma orm server
--- 		lspconfig["prismals"].setup({
--- 			capabilities = capabilities,
--- 			on_attach = on_attach,
--- 		})
-
--- 		-- configure graphql language server
--- 		lspconfig["graphql"].setup({
--- 			capabilities = capabilities,
--- 			on_attach = on_attach,
--- 			filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
--- 		})
-
--- 		-- configure emmet language server
--- 		lspconfig["emmet_ls"].setup({
--- 			capabilities = capabilities,
--- 			on_attach = on_attach,
--- 			filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
--- 		})
-
--- 		-- configure python server
--- 		lspconfig["pyright"].setup({
--- 			capabilities = capabilities,
--- 			on_attach = on_attach,
--- 		})
-
--- 		-- configure lua server (with special settings)
--- 		lspconfig["lua_ls"].setup({
--- 			capabilities = capabilities,
--- 			on_attach = on_attach,
--- 			settings = { -- custom settings for lua
--- 				Lua = {
--- 					-- make the language server recognize "vim" global
--- 					diagnostics = {
--- 						globals = { "vim" },
--- 					},
--- 					workspace = {
--- 						-- make language server aware of runtime files
--- 						library = {
--- 							[vim.fn.expand("$VIMRUNTIME/lua")] = true,
--- 							[vim.fn.stdpath("config") .. "/lua"] = true,
--- 						},
--- 					},
--- 				},
--- 			},
--- 		})
--- 	end,
--- },
-
--- {
--- 	"williamboman/mason.nvim",
--- 	dependencies = {
--- 		"williamboman/mason-lspconfig.nvim",
--- 		"WhoIsSethDaniel/mason-tool-installer.nvim",
--- 	},
--- 	config = function()
--- 		-- import mason
--- 		local mason = require("mason")
-
--- 		-- import mason-lspconfig
--- 		local mason_lspconfig = require("mason-lspconfig")
-
--- 		local mason_tool_installer = require("mason-tool-installer")
-
--- 		-- enable mason and configure icons
--- 		mason.setup({
--- 			ui = {
--- 				icons = {
--- 					package_installed = "✓",
--- 					package_pending = "➜",
--- 					package_uninstalled = "✗",
--- 				},
--- 			},
--- 		})
-
--- 		mason_lspconfig.setup({
--- 			-- list of servers for mason to install
--- 			ensure_installed = {
--- 				"tsserver",
--- 				"html",
--- 				"cssls",
--- 				"tailwindcss",
--- 				"svelte",
--- 				"lua_ls",
--- 				"graphql",
--- 				"emmet_ls",
--- 				"prismals",
--- 				"pyright",
--- 			},
--- 			-- auto-install configured servers (with lspconfig)
--- 			automatic_installation = true, -- not the same as ensure_installed
--- 		})
-
--- 		mason_tool_installer.setup({
--- 			ensure_installed = {
--- 				"prettier", -- prettier formatter
--- 				"stylua", -- lua formatter
--- 				"isort", -- python formatter
--- 				"black", -- python formatter
--- 				"pylint", -- python linter
--- 				"eslint_d", -- js linter
--- 			},
--- 		})
--- 	end,
--- },
