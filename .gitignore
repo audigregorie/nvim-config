@@ -1,0 +1,4 @@
+# ignore these files
+kickstart-init.lua
+neovim.md
+test-init.lua
