@@ -1,16 +1,25 @@
---[[ Init File --]]
+-- Init Lua file
 
--- ////# Configure Globals //////
+-- ========================================
+-- # CONFIGURE GLOBALS
+-- ========================================
+
 -- Set <space> as the leader key
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+
 vim.g.undotree_WindowLayout = 2
 vim.g.undotree_SplitWidth = 35
 vim.g.undotree_SetFocusWhenToggle = 1
 vim.g.undotree_DiffpanelHeight = 25
 
--- ////# Configure Plugins ////#
+vim.g.tpipeline_autoembed = 0
+
+
+-- ========================================
+-- # CONFIGURE PLUGINS
+-- ========================================
 -- Install package manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -26,8 +35,8 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-	-- // CONFIGURE COLORSCHEMES //
-	-- // Vscode
+	-- ## CONFIGURE COLORSCHEMES
+	-- Vscode
 	{
 		"Mofiqul/vscode.nvim",
 		name = "vscode",
@@ -37,9 +46,8 @@ require("lazy").setup({
 		end,
 	},
 
-	-- // Onedark
+	-- Onedark
 	-- {
-	-- 	-- Theme inspired by Atom
 	-- 	"navarasu/onedark.nvim",
 	-- 	name = "onedark",
 	-- 	priority = 1000,
@@ -47,8 +55,8 @@ require("lazy").setup({
 	-- 		vim.cmd.colorscheme("onedark")
 	-- 	end,
 	-- },
-	--
-	-- // Onedarkpro
+
+	-- Onedarkpro
 	-- {
 	-- 	"olimorris/onedarkpro.nvim",
 	-- 	name = "onedarkpro",
@@ -58,17 +66,17 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 
-	-- // Electron
+	-- Electron
 	-- {
 	-- 	"ivanlhz/vim-electron",
 	-- 	name = "electron",
-	-- 	priority = 1001, -- Ensure it loads first
+	-- 	priority = 1000,
 	-- 	config = function()
 	-- 		vim.cmd.colorscheme("electron")
 	-- 	end,
 	-- },
-	--
-	-- // Tokyonight
+
+	-- Tokyonight
 	-- {
 	-- 	"folke/tokyonight.nvim",
 	-- 	name = "tokyonight",
@@ -79,7 +87,7 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 
-	-- // Catppuccin
+	-- Catppuccin
 	-- {
 	-- 	"catppuccin/nvim",
 	-- 	name = "catppuccin",
@@ -89,7 +97,7 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 
-	-- // Zephyr
+	-- Zephyr
 	-- {
 	-- 	"nvimdev/zephyr-nvim",
 	-- 	name = "zephyr",
@@ -99,7 +107,7 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 
-	-- // Nightfox
+	-- Nightfox
 	-- {
 	-- 	"EdenEast/nightfox.nvim",
 	-- 	name = "nightfox",
@@ -109,7 +117,7 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 
-	-- // Palenight
+	-- Palenight
 	-- {
 	-- 	"alexmozaidze/palenight.nvim",
 	-- 	name = "palenight",
@@ -119,7 +127,7 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 
-	-- // Nordic
+	-- Nordic
 	-- {
 	-- 	"AlexvZyl/nordic.nvim",
 	-- 	name = "nordic",
@@ -129,13 +137,17 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 
-	-- // Nvim-tree
+
+	-- Nvim-tree
 	{
 		"nvim-tree/nvim-tree.lua",
 		config = function()
 			-- disable netrw at the very start of your init.lua
 			vim.g.loaded_netrw = 1
 			vim.g.loaded_netrwPlugin = 1
+			vim.g.nvim_tree_highlight_opened_files = 1
+			vim.g.nvim_tree_highlight_modified = 1
+
 
 			-- Standard left positioned nvim-tree window
 			require("nvim-tree").setup({
@@ -151,8 +163,8 @@ require("lazy").setup({
 				},
 				sort_by = "case_sensitive",
 				view = {
-					width = 60,
-					relativenumber = true,
+					width = 50,
+					-- relativenumber = true,
 					side = "left",
 					signcolumn = "yes",
 				},
@@ -163,7 +175,6 @@ require("lazy").setup({
 						diagnostics = true,
 					},
 				},
-
 				actions = {
 					open_file = {
 						quit_on_open = true,
@@ -171,7 +182,29 @@ require("lazy").setup({
 				},
 				renderer = {
 					group_empty = true,
-					indent_width = 2,
+					root_folder_label = ":~:s?$?/..?",
+					indent_width = 3,
+					special_files = { "Cargo.toml", "Makefile", "README.md", "readme.md" },
+					symlink_destination = true,
+					highlight_git = false,
+					highlight_diagnostics = true,
+					highlight_opened_files = "name",
+					highlight_modified = "none",
+					highlight_bookmarks = "none",
+					highlight_clipboard = "none",
+					indent_markers = {
+						enable = true,
+						inline_arrows = true,
+						icons = {
+							-- corner = "└",
+							corner = " ",
+							edge = "│ ",
+							item = "│ ",
+							-- bottom = "─",
+							bottom = " ",
+							none = " ",
+						},
+					},
 
 					icons = {
 						web_devicons = {
@@ -180,7 +213,7 @@ require("lazy").setup({
 								color = true,
 							},
 							folder = {
-								enable = false,
+								enable = true,
 								color = true,
 							},
 						},
@@ -204,8 +237,10 @@ require("lazy").setup({
 								arrow_open = "",
 								-- arrow_open = "○",
 								default = "",
-								open = "",
-								empty = "",
+								-- open = "",
+								open = "",
+								-- empty = "",
+								empty = "○",
 								empty_open = "",
 								symlink = "",
 								symlink_open = "",
@@ -224,7 +259,7 @@ require("lazy").setup({
 	},
 
 
-	-- // LSP
+	-- LSP
 	{
 		-- LSP Configuration & Plugins
 		"neovim/nvim-lspconfig",
@@ -253,7 +288,6 @@ require("lazy").setup({
 
 				nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
 				nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
-
 				nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
 				nmap("gI", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
 				nmap("<leader>gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
@@ -262,13 +296,11 @@ require("lazy").setup({
 					"[D]ocument [S]ymbols")
 				nmap("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols,
 					"[W]orkspace [S]ymbols")
-
-				--der>hd See `:help K` for why this keymap
+				-- See `:help K` for why this keymap
 				nmap("<leader>sd", vim.lsp.buf.signature_help, "Signature Documentation")
 				nmap("<leader>hd", vim.lsp.buf.hover, "Hover Documentation")
 				-- nmap("K", vim.lsp.buf.signature_help, "Signature Documentation")
 				-- nmap("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")
-
 				-- Lesser used LSP functionality
 				nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 				nmap("<leader>wa", vim.lsp.buf.add_workspace_folder, "[W]orkspace [A]dd Folder")
@@ -378,7 +410,6 @@ require("lazy").setup({
 			-- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 			capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
-
 			-- Ensure the servers above are installed
 			local mason_lspconfig = require("mason-lspconfig")
 
@@ -399,7 +430,8 @@ require("lazy").setup({
 		end,
 	},
 
-	-- // Treesitter
+
+	-- Treesitter
 	{
 		-- Highlight, edit, and navigate code
 		"nvim-treesitter/nvim-treesitter",
@@ -418,6 +450,10 @@ require("lazy").setup({
 					"go",
 					"http",
 					"lua",
+					"xml",
+					"http",
+					"json",
+					"graphql",
 					"python",
 					"rust",
 					"tsx",
@@ -427,15 +463,12 @@ require("lazy").setup({
 					"css",
 					"html",
 					"javascript",
-					"json",
 				},
 				-- Install parsers synchronously (only applied to `ensure_installed`)
 				sync_install = false,
-
 				-- Automatically install missing parsers when entering buffer
 				-- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
 				auto_install = false,
-
 				-- List of parsers to ignore installing (or "all")
 				ignore_install = {},
 				modules = {},
@@ -502,6 +535,7 @@ require("lazy").setup({
 					},
 				},
 			})
+
 			-- Diagnostic keymaps
 			vim.keymap.set("n", "[d", vim.diagnostic.goto_prev,
 				{ desc = "Go to previous diagnostic message" })
@@ -513,7 +547,7 @@ require("lazy").setup({
 	},
 
 
-	-- // Nvim-cmp
+	-- Nvim-cmp
 	{
 		-- Autocompletion
 		"hrsh7th/nvim-cmp",
@@ -532,7 +566,6 @@ require("lazy").setup({
 			local luasnip = require("luasnip")
 			require("luasnip.loaders.from_vscode").lazy_load()
 			luasnip.config.setup({})
-
 
 			cmp.setup({
 				snippet = {
@@ -576,15 +609,25 @@ require("lazy").setup({
 				}),
 				sources = {
 					{ name = "nvim_lsp" },
+					{ name = "codeium" },
 					{ name = "luasnip" },
 					{ name = "path" },
 					{ name = "buffer", },
 				},
+				-- formatting = {
+				-- 	format = require('lspkind').cmp_format({
+				-- 		mode = "symbol",
+				-- 		maxwidth = 50,
+				-- 		ellipsis_char = '...',
+				-- 		symbol_map = { Codeium = "", }
+				-- 	})
+				-- }
 			})
 		end,
 	},
 
-	-- // Tailwindcss Colorizer Cmp
+
+	-- Tailwindcss Colorizer Cmp
 	{
 		"roobert/tailwindcss-colorizer-cmp.nvim",
 		dependencies = "hrsh7th/nvim-cmp",
@@ -592,7 +635,7 @@ require("lazy").setup({
 	},
 
 
-	-- // Null-ls
+	-- Null-ls
 	{
 		"jose-elias-alvarez/null-ls.nvim",
 		dependencies = {
@@ -602,7 +645,6 @@ require("lazy").setup({
 		},
 		config = function()
 			local null_ls = require("null-ls")
-
 			local group = vim.api.nvim_create_augroup("lsp_format_on_save", { clear = false })
 			local event = "BufWritePre" -- or "BufWritePost"
 			local async = event == "BufWritePost"
@@ -652,7 +694,8 @@ require("lazy").setup({
 		end,
 	},
 
-	-- // Mason Null-ls
+
+	-- Mason Null-ls
 	{
 		"jay-babu/mason-null-ls.nvim",
 		event = { "BufReadPre", "BufNewFile" },
@@ -669,7 +712,8 @@ require("lazy").setup({
 		end,
 	},
 
-	-- // Vim-commentary
+
+	-- Vim-commentary
 	{
 		"tpope/vim-commentary",
 		-- "gcc" to comment out a line in one go
@@ -677,7 +721,15 @@ require("lazy").setup({
 		-- "gcap" to comment out a paragraph
 	},
 
-	-- // Autopairs
+
+	-- -- Comment
+	-- {
+	-- "numToStr/Comment.nvim",
+	-- lazy = false,
+	-- },
+
+
+	-- Autopairs
 	{
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
@@ -685,7 +737,7 @@ require("lazy").setup({
 	},
 
 
-	-- // Trouble
+	-- Trouble
 	{
 		"folke/trouble.nvim",
 		dependencies = "nvim-tree/nvim-web-devicons",
@@ -711,13 +763,13 @@ require("lazy").setup({
 	},
 
 
-	-- // Lualine
+	-- Lualine
 	{
 		-- Set lualine as statusline
 		"nvim-lualine/lualine.nvim",
 		opts = {
 			-- theme = "tokyonight",
-			theme = "electron",
+			-- theme = "electron",
 			-- theme = "ayu_mirage",
 			-- theme = "onedark",
 		},
@@ -726,13 +778,47 @@ require("lazy").setup({
 				return [[Get Shit Done.]]
 			end
 
+			local function pipe()
+				return [[ | ]]
+			end
+
+			local colors = {
+				blue   = '#80a0ff',
+				cyan   = '#79dac8',
+				black  = '#080808',
+				white  = '#c6c6c6',
+				red    = '#ff5189',
+				violet = '#d183e8',
+				-- grey   = '#303030',
+				tan    = '#D2B48C',
+				grey   = '#1C1C1C',
+			}
+
+			local bubbles_theme = {
+				normal = {
+					a = { fg = colors.black, bg = colors.tan },
+					b = { fg = colors.white, bg = colors.grey },
+					c = { fg = colors.white },
+				},
+				insert = { a = { fg = colors.black, bg = colors.blue } },
+				visual = { a = { fg = colors.black, bg = colors.cyan } },
+				replace = { a = { fg = colors.black, bg = colors.red } },
+				inactive = {
+					a = { fg = colors.white, bg = colors.black },
+					b = { fg = colors.white, bg = colors.black },
+					c = { fg = colors.white },
+				},
+			}
+
 			require("lualine").setup({
 				options = {
+					theme = bubbles_theme,
 					icons_enabled = true,
-					component_separators = "|",
-					-- component_separators = { left = "", right = "" },
+					-- component_separators = "|",
+					component_separators = " ",
+					section_separators = { left = '', right = '' },
 					-- section_separators = { left = "", right = "" },
-					section_separators = { left = "", right = "" },
+					-- section_separators = { left = "", right = "" },
 					disabled_filetypes = {
 						statusline = {},
 						winbar = {},
@@ -748,11 +834,16 @@ require("lazy").setup({
 				},
 				sections = {
 					lualine_a = { "mode" },
-					lualine_b = { "branch", "diff", "diagnostics" },
-					lualine_c = { "filename" },
-					lualine_x = { { getShitDone }, "encoding", "fileformat", "filetype" },
-					lualine_y = { "progress" },
-					lualine_z = { "location" },
+					lualine_b = { "diff", { pipe }, "diagnostics" },
+					lualine_c = { '%=', "branch", "filename" },
+					-- lualine_x = { { getShitDone }, "encoding", "fileformat", "filetype" },
+					lualine_x = { "rest" },
+					lualine_y = { { getShitDone }, "progress" },
+					-- lualine_y = { { getShitDone }, "encoding", "fileformat", "filetype", "progress" },
+					-- lualine_z = { "location" },
+					lualine_z = {
+						{ 'location', separator = { right = '' }, left_padding = 2 },
+					},
 				},
 				inactive_sections = {
 					lualine_a = {},
@@ -770,14 +861,17 @@ require("lazy").setup({
 		end,
 	},
 
-	-- // Git related plugins
-	"tpope/vim-fugitive",
-	"tpope/vim-rhubarb",
 
-	-- // Detect tabstop and shiftwidth automatically
-	"tpope/vim-sleuth",
+	-- Git related plugins
+	{ "tpope/vim-fugitive" },
+	{ "tpope/vim-rhubarb" },
 
-	-- // Git Signs
+
+	-- Detect tabstop and shiftwidth automatically
+	{ "tpope/vim-sleuth" },
+
+
+	-- Git Signs
 	{
 		-- Adds git related signs to the gutter, as well as utilities for managing changes
 		"lewis6991/gitsigns.nvim",
@@ -812,7 +906,8 @@ require("lazy").setup({
 		},
 	},
 
-	-- // Indent Blankline
+
+	-- Indent Blankline
 	{
 		-- Add indentation guides even on blank lines
 		"lukas-reineke/indent-blankline.nvim",
@@ -824,11 +919,12 @@ require("lazy").setup({
 		},
 	},
 
-	-- // Shows available keybindings
-	{ "folke/which-key.nvim", opts = {} },
+
+	-- Shows available keybindings
+	{ "folke/which-key.nvim",          opts = {} },
 
 
-	-- // Telescope
+	-- Telescope
 	{
 		-- Fuzzy Finder (files, lsp, etc)
 		"nvim-telescope/telescope.nvim",
@@ -896,7 +992,6 @@ require("lazy").setup({
 				extensions = {
 					file_browser = {
 						-- theme = "ivy",
-						--
 						-- theme = "dropdown",
 						-- layout_strategy = "horizontal",
 						-- layout_config = { height = 0.7, width = 0.8, prompt_position = "bottom" },
@@ -1012,11 +1107,12 @@ require("lazy").setup({
 			pcall(require("telescope").load_extension("tailiscope"))
 			vim.keymap.set("n", "<leader>tw", ":Telescope tailiscope<CR>")
 
-			-- Git UI
-			pcall(require("telescope").load_extension("lazygit"))
-			vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>")
+			-- -- Git UI
+			-- pcall(require("telescope").load_extension("lazygit"))
+			-- vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>")
 		end,
 	},
+
 
 	-- // Telescope File Browser
 	{
@@ -1024,8 +1120,9 @@ require("lazy").setup({
 		dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
 	},
 
+
 	-- // Tailiscope (plugin for tailwind cheatsheet)
-	"danielvolchek/tailiscope.nvim",
+	{ "danielvolchek/tailiscope.nvim", },
 
 
 	-- // Cheatsheet
@@ -1066,8 +1163,9 @@ require("lazy").setup({
 		end,
 	},
 
+
 	-- // Telescope UI Select
-	"nvim-telescope/telescope-ui-select.nvim",
+	{ "nvim-telescope/telescope-ui-select.nvim", },
 
 
 	-- // Neoclip
@@ -1078,18 +1176,18 @@ require("lazy").setup({
 		end,
 	},
 
-	-- // Lazygit
-	{
-		"kdheepak/lazygit.nvim",
-		dependencies = {
-			"nvim-telescope/telescope.nvim",
-			"nvim-lua/plenary.nvim",
-		},
-		config = function()
-			require("telescope").load_extension("lazygit")
-		end,
-	},
 
+	-- -- // Lazygit
+	-- {
+	-- 	"kdheepak/lazygit.nvim",
+	-- 	dependencies = {
+	-- 		"nvim-telescope/telescope.nvim",
+	-- 		"nvim-lua/plenary.nvim",
+	-- 	},
+	-- 	config = function()
+	-- 		require("telescope").load_extension("lazygit")
+	-- 	end,
+	-- },
 
 
 	-- // Colorizer
@@ -1104,60 +1202,6 @@ require("lazy").setup({
 			},
 		},
 	},
-
-
-
-	-- // Prettier
-	-- {
-	-- 	"MunifTanjim/prettier.nvim",
-	-- 	config = function()
-	-- 		local prettier = require("prettier")
-
-	-- 		prettier.setup({
-	-- 			bin = "prettier", -- or `'prettierd'` (v0.23.3+)
-	-- 			filetypes = {
-	-- 				"css",
-	-- 				"graphql",
-	-- 				"html",
-	-- 				"javascript",
-	-- 				"javascriptreact",
-	-- 				"json",
-	-- 				"less",
-	-- 				-- "markdown",
-	-- 				"scss",
-	-- 				"typescript",
-	-- 				"typescriptreact",
-	-- 				"yaml",
-	-- 			},
-	-- 			cli_options = {
-	-- 				arrow_parens = "always",
-	-- 				bracket_spacing = true,
-	-- 				bracket_same_line = true,
-	-- 				print_width = 80,
-	-- 				semi = false,
-	-- 				single_attribute_per_line = false,
-	-- 				single_quote = true,
-	-- 				tab_width = 2,
-	-- 				trailing_comma = "all",
-	-- 			},
-	-- 			["null-ls"] = {
-	-- 				condition = function()
-	-- 					return prettier.config_exists({
-	-- 						-- if `false`, skips checking `package.json` for `"prettier"` key
-	-- 						check_package_json = true,
-	-- 					})
-	-- 				end,
-	-- 				runtime_condition = function(params)
-	-- 					-- return false to skip running prettier
-	-- 					return true
-	-- 				end,
-	-- 				timeout = 5000,
-	-- 			},
-	-- 		})
-	-- 	end,
-	-- },
-
-
 
 
 	-- // Vim Surround
@@ -1181,17 +1225,20 @@ require("lazy").setup({
 	--]]
 	},
 
+
 	{
 		-- // Vim px to rem
 		-- Change Px to Rem or Rem to Px ( :Rem or :Px )
 		"Oldenborg/vim-px-to-rem",
 	},
 
+
 	-- // Vim Tmux Navigator
 	{
 		"christoomey/vim-tmux-navigator",
 		lazy = false,
 	},
+
 
 	-- // Toggleterm
 	{
@@ -1213,24 +1260,25 @@ require("lazy").setup({
 				},
 			})
 
-			local Terminal = require("toggleterm.terminal").Terminal
-			local lazygit = Terminal:new({ cmd = "lazygit", hidden = true })
+			-- local Terminal = require("toggleterm.terminal").Terminal
+			-- local lazygit = Terminal:new({ cmd = "lazygit", hidden = true })
 
-			function _lazygit_toggle()
-				lazygit:toggle()
-			end
+			-- function _lazygit_toggle()
+			-- 	lazygit:toggle()
+			-- end
 
-			vim.api.nvim_set_keymap(
-				"n",
-				"<leader>lg",
-				"<cmd>lua _lazygit_toggle()<CR>",
-				{ noremap = true, silent = true }
-			)
+			-- vim.api.nvim_set_keymap(
+			-- 	"n",
+			-- 	"<leader>lg",
+			-- 	"<cmd>lua _lazygit_toggle()<CR>",
+			-- 	{ noremap = true, silent = true }
+			-- )
 		end,
 	},
 
+
 	-- // Transparent
-	"xiyaowong/transparent.nvim",
+	{ "xiyaowong/transparent.nvim", },
 
 
 	-- // Firenvim
@@ -1245,71 +1293,26 @@ require("lazy").setup({
 		end,
 	},
 
-	----  // Rest
-	--{
-	--	-- Rest api
-	--	"rest-nvim/rest.nvim",
-	--	requires = { "nvim-lua/plenary.nvim" },
-	--	config = function()
-	--		require("rest-nvim").setup({
-	--			-- Open request results in a horizontal split
-	--			result_split_horizontal = false,
-	--			-- Keep the http file buffer above|left when split horizontal|vertical
-	--			result_split_in_place = false,
-	--			-- Skip SSL verification, useful for unknown certificates
-	--			skip_ssl_verification = false,
-	--			-- Encode URL before making request
-	--			encode_url = true,
-	--			-- Highlight request on run
-	--			highlight = {
-	--				enabled = true,
-	--				timeout = 150,
-	--			},
-	--			result = {
-	--				-- toggle showing URL, HTTP info, headers at top the of result window
-	--				show_url = true,
-	--				-- show the generated curl command in case you want to launch
-	--				-- the same request via the terminal (can be verbose)
-	--				show_curl_command = false,
-	--				show_http_info = true,
-	--				show_headers = true,
-	--				-- executables or functions for formatting response body [optional]
-	--				-- set them to false if you want to disable them
-	--				formatters = {
-	--					json = "jq",
-	--					html = function(body)
-	--						return vim.fn.system({ "tidy", "-i", "-q", "-" }, body)
-	--					end,
-	--				},
-	--			},
-	--			-- Jump to request line on run
-	--			jump_to_request = false,
-	--			env_file = ".env",
-	--			custom_dynamic_variables = {},
-	--			yank_dry_run = true,
-	--		})
-	--		vim.api.nvim_create_autocmd("FileType", {
-	--			pattern = "http",
-	--			callback = function()
-	--				local buff = tonumber(vim.fn.expand("<abuf>"), 10)
-	--				vim.keymap.set("n", "<leader>rn", require("rest-nvim").run, { noremap = true, buffer = buff })
-	--				vim.keymap.set("n", "<leader>rl", require("rest-nvim").last, { noremap = true, buffer = buff })
-	--				vim.keymap.set("n", "<leader>rp", function()
-	--					require("rest-nvim").run(true)
-	--				end, { noremap = true, buffer = buff })
-	--			end,
-	--		})
-	--	end,
-	--},
 
 	-- // Lsp_lines
-	-- Shows errors
-	-- {
-	-- 	"https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-	-- 	config = function()
-	-- 		require("lsp_lines").setup()
-	-- 	end,
-	-- },
+	{
+		-- Shows errors
+		"https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+		config = function()
+			require("lsp_lines").setup()
+
+			-- Disable virtual_text since it's redundant due to lsp_lines.
+			vim.diagnostic.config({
+				virtual_text = false,
+			})
+
+			-- Disable virtual_text since it's redundant due to lsp_lines.
+			vim.diagnostic.config({
+				virtual_text = false,
+			})
+		end,
+	},
+
 
 	-- // Chatgpt
 	-- {
@@ -1328,6 +1331,7 @@ require("lazy").setup({
 	-- 	},
 	-- },
 
+
 	-- // Startup
 	-- {
 	-- 	"startup-nvim/startup.nvim",
@@ -1336,6 +1340,7 @@ require("lazy").setup({
 	-- 		require("startup").setup({ theme = "startify" })
 	-- 	end,
 	-- },
+
 
 	-- // MarkdownHeaders
 	{
@@ -1361,6 +1366,7 @@ require("lazy").setup({
 			keymap("n", "<leader>mh", "<cmd>MarkdownHeaders<CR>", opts)
 		end,
 	},
+
 
 	-- Nvim-dap Debugger
 	{
@@ -1443,10 +1449,155 @@ require("lazy").setup({
 		end,
 	},
 
+
 	-- // Undo Tree
 	{
 		"mbbill/undotree",
 	},
+
+
+	-- // Rainbow Brackets
+	{
+		"HiPhish/rainbow-delimiters.nvim",
+		config = function()
+			require('rainbow-delimiters.setup').setup {
+				blacklist = {
+					'html'
+				},
+				highlight = {
+					'RainbowDelimiterRed',
+					'RainbowDelimiterYellow',
+					'RainbowDelimiterBlue',
+					'RainbowDelimiterOrange',
+					'RainbowDelimiterGreen',
+					'RainbowDelimiterViolet',
+					'RainbowDelimiterCyan',
+				},
+			}
+		end
+	},
+
+
+	-- // Codeium AI
+	{
+		"Exafunction/codeium.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"hrsh7th/nvim-cmp",
+		},
+		config = function()
+			require("codeium").setup({
+			})
+		end
+	},
+
+
+	-- Oil file manager
+	-- {
+	-- 	'stevearc/oil.nvim',
+	-- 	opts = {},
+	-- 	-- Optional dependencies
+	-- 	dependencies = { "nvim-tree/nvim-web-devicons" },
+	-- 	config = function()
+	-- 		require("oil").setup()
+
+	-- 		vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+	-- 	end
+	-- },
+
+
+	---- // Rest Api
+	--{
+	--	"vhyrro/luarocks.nvim",
+	--	priority = 1000,
+	--	config = true,
+	--},
+	--{
+	--	"rest-nvim/rest.nvim",
+	--	ft = "http",
+	--	dependencies = { "luarocks.nvim" },
+	--	config = function()
+	--		require("rest-nvim").setup({
+	--			client = "curl",
+	--			env_file = ".env",
+	--			env_pattern = "\\.env$",
+	--			env_edit_command = "tabedit",
+	--			encode_url = true,
+	--			skip_ssl_verification = false,
+	--			custom_dynamic_variables = {},
+	--			logs = {
+	--				level = "info",
+	--				save = true,
+	--			},
+	--			result = {
+	--				split = {
+	--					horizontal = false,
+	--					in_place = false,
+	--					stay_in_current_window_after_split = true,
+	--				},
+	--				behavior = {
+	--					decode_url = true,
+	--					show_info = {
+	--						url = true,
+	--						headers = true,
+	--						http_info = true,
+	--						curl_command = true,
+	--					},
+	--					statistics = {
+	--						enable = true,
+	--						---@see https://curl.se/libcurl/c/curl_easy_getinfo.html
+	--						stats = {
+	--							{ "total_time",      title = "Time taken:" },
+	--							{ "size_download_t", title = "Download size:" },
+	--						},
+	--					},
+	--					formatters = {
+	--						json = "jq",
+	--						html = function(body)
+	--							if vim.fn.executable("tidy") == 0 then
+	--								return body, { found = false, name = "tidy" }
+	--							end
+	--							local fmt_body = vim.fn.system({
+	--								"tidy",
+	--								"-i",
+	--								"-q",
+	--								"--tidy-mark", "no",
+	--								"--show-body-only", "auto",
+	--								"--show-errors", "0",
+	--								"--show-warnings", "0",
+	--								"-",
+	--							}, body):gsub("\n$", "")
+
+	--							return fmt_body, { found = true, name = "tidy" }
+	--						end,
+	--					},
+	--				},
+	--			},
+	--			highlight = {
+	--				enable = true,
+	--				timeout = 750,
+	--			},
+	--			---Example:
+	--			---
+	--			---```lua
+	--			---keybinds = {
+	--			---  {
+	--			---    "<localleader>rr", "<cmd>Rest run<cr>", "Run request under the cursor",
+	--			---  },
+	--			---  {
+	--			---    "<localleader>rl", "<cmd>Rest run last<cr>", "Re-run latest request",
+	--			---  },
+	--			---}
+	--			---
+	--			---```
+	--			---@see vim.keymap.set
+	--			keybinds = {
+	--				vim.keymap.set("n", "<leader>rr", "<cmd>RestRun<cr>", { noremap = true }),
+	--				vim.keymap.set("n", "<leader>rl", "<cmd>RestRunLast<cr>", { noremap = true }),
+	--			},
+	--		})
+	--	end,
+	--},
 
 
 	---- // Harpoon
@@ -1466,39 +1617,42 @@ vim.opt.shell = "zsh"
 vim.opt.backspace = { "indent", "eol", "start" } -- allows <backspace> to function as we expect
 vim.opt.backup = false                           -- creates a backup file
 vim.opt.clipboard = "unnamedplus"                -- allows neovim to access the system clipboard
-vim.opt.cmdheight = 0                            -- more space in the neovim command line for displaying messages
+vim.opt.cmdheight = 1                            -- more space in the neovim command line for displaying messages
 vim.opt.completeopt = { "menuone", "noselect" }  -- mostly just for cmp
 vim.opt.conceallevel = 0                         -- so that `` is visible in markdown files
 -- vim.opt.fileencoding = "UTF-8"                   -- the encoding written to a file
 -- vim.opt.fillchars = "eob: "                      -- Remove "~" from empty lines
-vim.opt.hlsearch = true       -- highlight all matches on previous search pattern
-vim.opt.ignorecase = true     -- ignore case in search patterns
-vim.opt.iskeyword:append("-") -- hyphenated words recognized by searches
-vim.opt.mouse = "a"           -- allow the mouse to be used in neovim
-vim.opt.pumheight = 10        -- pop up menu height
-vim.opt.showmode = false      -- hide -- NORMAL --  -- INSERT --, mode
-vim.opt.showtabline = 0       -- always show tabs
+vim.opt.hlsearch = true                         -- highlight all matches on previous search pattern
+vim.opt.ignorecase = true                       -- ignore case in search patterns
+vim.opt.iskeyword:append("-")                   -- hyphenated words recognized by searches
+vim.opt.mouse = "a"                             -- allow the mouse to be used in neovim
+vim.opt.pumheight = 10                          -- pop up menu height
+vim.opt.showmode = false                        -- hide -- NORMAL --  -- INSERT --, mode
+vim.opt.showtabline = 0                         -- always show tabs
 vim.opt.background = "dark"
-vim.opt.smartcase = true      -- smart case
-vim.opt.smartindent = true    -- make indenting smarter again
-vim.opt.splitbelow = true     -- force all horizontal splits to go below current window
-vim.opt.splitright = true     -- force all vertical splits to go to the right of current window
-vim.opt.swapfile = false      -- creates a swapfile
-vim.opt.termguicolors = true  -- set termguicolors to enable highlight groups
-vim.opt.timeoutlen = 300      -- time to wait for a mapped sequence to complete (in milliseconds)
-vim.opt.undofile = true       -- enable persistent undo
-vim.opt.updatetime = 300      -- faster completion (4000ms default)
-vim.opt.writebackup = false   -- if a file is being edited or was written to file with another program, it is not allowed to be edited
-vim.opt.expandtab = true      -- convert tabs to spaces
-vim.opt.shiftwidth = 2        -- the number of spaces inserted for each indentation
-vim.opt.tabstop = 2           -- insert 2 spaces for a tab
-vim.opt.cursorline = true     -- highlight the current line
+vim.opt.smartcase = true                        -- smart case
+vim.opt.smartindent = true                      -- make indenting smarter again
+vim.opt.splitbelow = true                       -- force all horizontal splits to go below current window
+vim.opt.splitright = true                       -- force all vertical splits to go to the right of current window
+vim.opt.swapfile = false                        -- creates a swapfile
+vim.opt.termguicolors = true                    -- set termguicolors to enable highlight groups
+vim.opt.timeoutlen = 300                        -- time to wait for a mapped sequence to complete (in milliseconds)
+vim.opt.undofile = true                         -- enable persistent undo
+vim.opt.updatetime = 300                        -- faster completion (4000ms default)
+vim.opt.writebackup = false                     -- if a file is being edited or was written to file with another program, it is not allowed to be edited
+vim.opt.expandtab = true                        -- convert tabs to spaces
+vim.opt.shiftwidth = 2                          -- the number of spaces inserted for each indentation
+vim.opt.softtabstop = 2                         -- the number of spaces inserted for each indentation
+vim.opt.tabstop = 2                             -- insert 2 spaces for a tab
+vim.opt.cursorline = true                       -- highlight the current line
 vim.opt.cursorlineopt = "number"
-vim.opt.number = true         -- set numbered lines
-vim.opt.relativenumber = true -- set relative numbered lines
--- vim.opt.numberwidth = 2                         -- set number column width to 2 {default 4}
-vim.opt.signcolumn = "yes"    -- always show the sign column, otherwise it would shift the text each time
-vim.opt.wrap = true           -- display lines as one long line
+vim.opt.number = true                           -- set numbered lines
+vim.opt.relativenumber = true                   -- set relative numbered lines
+vim.opt.numberwidth = 3                         -- set number column width to 2 {default 4}
+vim.opt.signcolumn =
+"yes"                                           -- always show the sign column, otherwise it would shift the text each time
+vim.opt.wrap = true                             -- display lines as one long line
+vim.opt.formatoptions:remove({ 'c', 'r', 'o' }) -- removes c, r, o flags
 
 -- " Indents word-wrapped lines as much as the 'parent' line
 vim.opt.breakindent = true
@@ -1514,6 +1668,11 @@ vim.opt.whichwrap = "bs<>[]hl"                  -- which "horizontal" keys are a
 vim.opt.shortmess:append("c")                   -- don't give |ins-completion-menu| messages
 vim.opt.formatoptions:remove({ "c", "r", "o" }) -- don't insert the current comment leader automatically for...
 -- ...auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode.
+
+-- vim.opt.foldmethod = "expr"
+-- vim.opt.foldmethod = "manual"
+-- vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+
 
 -- // CONFIGURE KEYMAPS //
 -- See `:help vim.keymap.set()`
@@ -1582,41 +1741,50 @@ vim.keymap.set("n", "<leader>//#", ":g^//#<cr>")
 vim.keymap.set("n", "<leader>t", vim.cmd.UndotreeToggle)
 
 -- Toggle between previous file and current file
--- vim.keymap.set("n", "<leader>b", "<c-^>")
 vim.keymap.set("n", "<leader>.", "<c-^>")
+
+-- Vim Fugitive
+vim.keymap.set("n", "<leader>gg", ":Git<cr>")
+
 
 
 -- // CONFIGURE VIM APIS //
--- Indent line color
-vim.api.nvim_set_hl(0, "IndentBlanklineChar", { fg = "#444444" })
+-- Set Nvim Background highlighting
+vim.api.nvim_set_hl(0, "Normal", { bg = "#1D1D1D" })
+vim.api.nvim_set_hl(0, "SignColumn", { bg = "#1D1D1D" })
 
--- Comment color
-vim.api.nvim_set_hl(0, "Comment", { fg = "#444444" })
+-- Set Nvim Foreground highlighting
+-- Indent line highlight
+vim.api.nvim_set_hl(0, "IndentBlanklineChar", { fg = "#222222" })
+-- Comment highlight
+vim.api.nvim_set_hl(0, "Comment", { fg = "#555555" })
 vim.api.nvim_set_hl(0, "@comment", { link = "Comment" })
+-- Line number highlight
+vim.api.nvim_set_hl(0, "LineNr", { fg = "#666666" })
 
 
--- Background color old
--- vim.api.nvim_set_hl(0, "Normal", { bg = "#14181D" })
--- vim.api.nvim_set_hl(0, "Normal", { bg = "#101216" })
--- vim.api.nvim_set_hl(0, "Normal", { bg = "#13151A" })
--- vim.api.nvim_set_hl(0, "Normal", { bg = "#1A1D24" })
--- vim.api.nvim_set_hl(0, "Normal", { bg = "#1A1D22" })
--- vim.cmd("highlight NvimTreeFolderName guifg=#c1c1c1")
--- vim.cmd("highlight NvimTreeOpenedFolderName guifg=#a1a1a1")
-
--- Background color
-vim.api.nvim_set_hl(0, "Normal", { bg = "#19191B" })
-vim.api.nvim_set_hl(0, "SignColumn", { bg = "#101217" })
-vim.api.nvim_set_hl(0, "LineNr", { bg = "#101217" })
--- Set NvimTree background tranparent
-vim.cmd [[hi NvimTreeNormal guibg=NONE ctermbg=NONE]]
-vim.cmd("highlight NvimTreeOpenedFolderName guibg=#13151A")
+-- Set NvimTree background highlighting
+-- Main background highlight
+vim.cmd("highlight NvimTreeNormal guibg=#181818 ctermbg=NONE")
+-- Folder highlight
+vim.cmd("highlight NvimTreeOpenedFolderName guibg=#181818")
+-- Cursor highlight
 vim.cmd("highlight NvimTreeCursorLine guibg=#151515")
 
--- Foreground color
-vim.api.nvim_set_hl(0, "LineNr", { fg = "#444444" })
-vim.cmd("highlight NvimTreeFolderName guifg=#72bcd4")
-vim.cmd("highlight NvimTreeOpenedFolderName guifg=#72bcd4")
+-- Set NvimTree Foreground highlighting
+-- NvimTree main foreground highlight
+vim.cmd [[hi NvimTreeNormal guifg=#FFFFFF]]
+-- NvimTree folder highlight
+vim.cmd("highlight NvimTreeFolderName guifg=#4EC9B0")
+vim.cmd("highlight NvimTreeOpenedFolderName guifg=#4FC1FE")
+vim.cmd('highlight NvimTreeFolderIcon guifg=#a1a1a1')
+-- NvimTree indent highlight
+vim.cmd('highlight NvimTreeIndentMarker guifg=#333333')
+-- NvimTree file highlight
+vim.cmd('highlight NvimTreeOpenedFile guifg=#CE9178')
+-- NvimTree modified files highlight
+vim.cmd('highlight NvimTreeModifiedFile guifg=#4EC9B0')
+vim.cmd('highlight NvimTreeGitDirty guifg=#3865BD') -- For modified files
 
 
 -- // CONFIGURE AUGROUPS //
@@ -1630,6 +1798,38 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	group = highlight_group,
 	pattern = "*",
 })
+
+
+-- -- Neovim folds
+-- -- leaderzo : open one fold
+-- -- leaderzc : close one fold
+-- -- leaderza : toggle one fold
+-- local vim = vim
+-- local api = vim.api
+-- local M = {}
+-- -- function to create a list of commands and convert them to autocommands
+-- -------- This function is taken from https://github.com/norcalli/nvim_utils
+-- function M.nvim_create_augroups(definitions)
+-- 	for group_name, definition in pairs(definitions) do
+-- 		api.nvim_command('augroup ' .. group_name)
+-- 		api.nvim_command('autocmd!')
+-- 		for _, def in ipairs(definition) do
+-- 			local command = table.concat(vim.tbl_flatten { 'autocmd', def }, ' ')
+-- 			api.nvim_command(command)
+-- 		end
+-- 		api.nvim_command('augroup END')
+-- 	end
+-- end
+
+-- local autoCommands = {
+-- 	-- other autocommands
+-- 	open_folds = {
+-- 		{ "BufReadPost,FileReadPost", "*", "normal zR" }
+-- 	}
+-- }
+
+-- M.nvim_create_augroups(autoCommands)
+
 
 
 -- -- Define a function to set colorscheme for specific filetypes
