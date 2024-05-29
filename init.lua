@@ -41,15 +41,42 @@ vim.opt.runtimepath:prepend(lazypath)
 
 require("lazy").setup({
 	-- ## CONFIGURE COLORSCHEMES
+	-- Vydark
+	-- {
+	-- 	"vyshane/vydark-vim-color",
+	-- 	config = function()
+	-- 		vim.cmd [[colorscheme vydark]]
+	-- 	end
+	-- },
+
+	-- Monochrome
+	-- {
+	-- 	'kdheepak/monochrome.nvim',
+	-- 	config = function()
+	-- 		vim.cmd [[colorscheme monochrome]]
+	-- 	end
+	-- },
+
 	-- Vscode
-	{
-		"Mofiqul/vscode.nvim",
-		name = "vscode",
-		-- priority = 1000,
-		config = function()
-			vim.cmd [[colorscheme vscode]]
-		end
-	},
+	-- {
+	-- 	"Mofiqul/vscode.nvim",
+	-- 	name = "vscode",
+	-- 	-- priority = 1000,
+	-- 	config = function()
+	-- 		vim.cmd [[colorscheme vscode]]
+	-- 	end
+	-- },	
+
+	-- Arctic (vscode)
+	-- {
+	-- 	"rockyzhang24/arctic.nvim",
+	-- 	dependencies = { "rktjmp/lush.nvim" },
+	-- 	name = "arctic",
+	-- 	-- priority = 1000,
+	-- 	config = function()
+	-- 		vim.cmd [[colorscheme arctic]]
+	-- 	end
+	-- },
 
 	-- Onedark
 	-- {
@@ -58,7 +85,7 @@ require("lazy").setup({
 	-- 	-- Ensure it loads first
 	-- 	priority = 1000,
 	-- 	config = function()
-	-- 	vim.cmd [[colorscheme onedark]]
+	-- 		vim.cmd [[colorscheme onedark]]
 	-- 	end,
 	-- },
 
@@ -68,7 +95,7 @@ require("lazy").setup({
 	-- 	name = "onedarkpro",
 	-- 	priority = 1000,
 	-- 	config = function()
-	-- 	  vim.cmd [[colorscheme onedark]]
+	-- 		vim.cmd [[colorscheme onedark]]
 	-- 	end,
 	-- },
 
@@ -78,7 +105,7 @@ require("lazy").setup({
 	-- 	name = "electron",
 	-- 	priority = 1000,
 	-- 	config = function()
-	--		vim.cmd [[colorscheme electron]]
+	-- 		vim.cmd [[colorscheme electron]]
 	-- 	end,
 	-- },
 
@@ -103,16 +130,6 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 
-	-- Zephyr
-	-- {
-	-- 	"nvimdev/zephyr-nvim",
-	-- 	name = "zephyr",
-	-- 	priority = 1000,
-	-- 	config = function()
-	-- 		vim.cmd [[colorscheme zephyr]]
-	-- 	end,
-	-- },
-
 	-- Nightfox
 	-- {
 	-- 	"EdenEast/nightfox.nvim",
@@ -123,16 +140,6 @@ require("lazy").setup({
 	-- 	end,
 	-- },
 
-	-- Palenight
-	-- {
-	-- 	"alexmozaidze/palenight.nvim",
-	-- 	name = "palenight",
-	-- 	priority = 1000,
-	-- 	config = function()
-	-- 		vim.cmd [[colorscheme palenight]]
-	-- 	end,
-	-- },
-
 	-- Nordic
 	-- {
 	-- 	"AlexvZyl/nordic.nvim",
@@ -140,6 +147,18 @@ require("lazy").setup({
 	-- 	priority = 1000,
 	-- 	config = function()
 	-- 		vim.cmd [[colorscheme nordic]]
+	-- 	end,
+	-- },
+
+	-- Tokyodark
+	-- {
+	-- 	"tiagovla/tokyodark.nvim",
+	-- 	opts = {
+	-- 		-- custom options here
+	-- 	},
+	-- 	config = function(_, opts)
+	-- 		require("tokyodark").setup(opts) -- calling setup is optional
+	-- 		vim.cmd [[colorscheme tokyodark]]
 	-- 	end,
 	-- },
 
@@ -167,9 +186,10 @@ require("lazy").setup({
 				},
 				sort_by = "case_sensitive",
 				view = {
-					width = 50,
+					width = 55,
 					-- relativenumber = true,
-					side = "left",
+					-- side = "left",
+					side = "right",
 					signcolumn = "yes",
 				},
 				log = {
@@ -187,7 +207,7 @@ require("lazy").setup({
 				renderer = {
 					group_empty = true,
 					root_folder_label = ":~:s?$?/..?",
-					indent_width = 3,
+					indent_width = 2,
 					special_files = { "Cargo.toml", "Makefile", "README.md", "readme.md" },
 					symlink_destination = true,
 					highlight_git = false,
@@ -1536,15 +1556,50 @@ require("lazy").setup({
 	--},
 
 
-	---- // Harpoon
-	---- {
-	---- 	"ThePrimeagen/harpoon",
-	---- 	branch = "harpoon2",
-	---- 	requires = { { "nvim-lua/plenary.nvim" } },
-	---- },
+	{
+		'MunifTanjim/prettier.nvim',
+		config = function()
+			require("prettier").setup({
+				cli_options = {
+					print_width = 120,
+					semi = false,
+					single_quote = true,
+					tab_width = 2,
+				},
+			})
+		end
+	},
 
 
-	-- lastplugin
+	-- // Headlines for Markdown
+	{
+		"lukas-reineke/headlines.nvim",
+		config = function()
+			vim.cmd [[highlight Headline1 guifg=#d78700]]
+			vim.cmd [[highlight Headline2 guifg=#87afff]]
+			vim.cmd [[highlight Headline3 guifg=#d75f87]]
+			vim.cmd [[highlight CodeBlock guibg=#101010]]
+
+			require("headlines").setup {
+				markdown = {
+					headline_highlights = { "Headline1", "Headline2", "Headline3" },
+					fat_headlines = false,
+					bullets = "",
+				},
+			}
+		end
+	},
+
+
+	-- // Harpoon
+	-- {
+	-- 	"ThePrimeagen/harpoon",
+	-- 	branch = "harpoon2",
+	-- 	requires = { { "nvim-lua/plenary.nvim" } },
+	-- },
+
+
+	-- LASTPLUGIN
 }, {})
 
 
@@ -1561,7 +1616,7 @@ vim.opt.backup = false                           -- creates a backup file
 vim.opt.clipboard = "unnamedplus"                -- allows neovim to access the system clipboard
 vim.opt.cmdheight = 1                            -- more space in the neovim command line for displaying messages
 vim.opt.completeopt = { "menuone", "noselect" }  -- mostly just for cmp
-vim.opt.conceallevel = 0                         -- so that `` is visible in markdown files
+vim.opt.conceallevel = 0                         -- 0 is so that `` is visible in markdown files
 -- vim.opt.fileencoding = "UTF-8"                   -- the encoding written to a file
 -- vim.opt.fillchars = "eob: "                      -- Remove "~" from empty lines
 vim.opt.hlsearch = true                         -- highlight all matches on previous search pattern
@@ -1595,7 +1650,6 @@ vim.opt.numberwidth = 3                         -- set number column width to 2 
 vim.opt.signcolumn =
 "yes"                                           -- always show the sign column, otherwise it would shift the text each time
 vim.opt.wrap = true                             -- display lines as one long line
-vim.opt.formatoptions:remove({ 'c', 'r', 'o' }) -- removes c, r, o flags
 -- vim.opt.formatoptions = 1                       -- " Ensures word-wrap does not split words
 vim.opt.formatoptions:remove({ "c", "r", "o" }) -- don't insert the current comment leader automatically for...
 vim.opt.breakindent = true                      -- " Indents word-wrapped lines as much as the 'parent' line
@@ -1685,65 +1739,71 @@ vim.keymap.set("n", "<leader>.", "<c-^>")
 -- Vim Fugitive
 vim.keymap.set("n", "<leader>gg", ":Git<cr>")
 
+-- Insert highlighted word in a console.log()
+-- vim.api.nvim_set_keymap('x', '<leader>l', [["adiconsole.log(<C-R>a)<Esc>kJ]], { noremap = true })
+vim.api.nvim_set_keymap('x', '<leader>l', [["adiconsole.log(<C-R>a<Esc>]], { noremap = true })
+
+
 
 -- ========================================
 -- # CONFIGURE VIM APIs
 -- ========================================
--- NVIM BACKGROUND HIGHLIGHTING --
--- Normal highlighting
-vim.api.nvim_set_hl(0, "Normal", { bg = "#1D1D1D" })
+-- -- NVIM BACKGROUND HIGHLIGHTING --
+-- -- Normal highlighting
+-- vim.api.nvim_set_hl(0, "Normal", { bg = "#1D1D1D" })
 
--- SignColumn highlighting
-vim.api.nvim_set_hl(0, "SignColumn", { bg = "#1D1D1D" })
-
-
--- NVIM FOREGROUND HIGHLIGHTING --
--- Indent Line highlight
-vim.api.nvim_set_hl(0, "IndentBlanklineChar", { fg = "#222222" })
-
--- Comment highlight
-vim.api.nvim_set_hl(0, "Comment", { fg = "#555555" })
-vim.api.nvim_set_hl(0, "@comment", { link = "Comment" })
-
--- Line Number highlight
-vim.api.nvim_set_hl(0, "LineNr", { fg = "#666666" })
+-- -- SignColumn highlighting
+-- vim.api.nvim_set_hl(0, "SignColumn", { bg = "#1D1D1D" })
 
 
--- NVIMTREE BACKGROUND HIGHLIGHTING --
--- NvimTree Normal highlight
-vim.cmd("highlight NvimTreeNormal guibg=#181818 ctermbg=NONE")
+-- -- NVIM FOREGROUND HIGHLIGHTING --
+-- -- Indent Line highlight
+-- vim.api.nvim_set_hl(0, "IndentBlanklineChar", { fg = "#222222" })
+vim.api.nvim_set_hl(0, "IndentBlanklineChar", { fg = "#333333" })
 
--- NvimTree Opened Folder Name highlight
-vim.cmd("highlight NvimTreeOpenedFolderName guibg=#181818")
+-- -- Comment highlight
+-- vim.api.nvim_set_hl(0, "Comment", { fg = "#555555" })
+-- vim.api.nvim_set_hl(0, "@comment", { link = "Comment" })
 
--- NvimTree Cursor Line highlight
-vim.cmd("highlight NvimTreeCursorLine guibg=#151515")
+-- -- Line Number highlight
+-- vim.api.nvim_set_hl(0, "LineNr", { fg = "#666666" })
 
 
--- NVIMTREE FOREGROUND HIGHLIGHTING --
--- NvimTree Normal highlight
-vim.cmd [[hi NvimTreeNormal guifg=#FFFFFF]]
+-- -- NVIMTREE BACKGROUND HIGHLIGHTING --
+-- -- NvimTree Normal highlight
+-- vim.cmd("highlight NvimTreeNormal guibg=#181818 ctermbg=NONE")
 
--- NvimTree Folder Name highlight
-vim.cmd("highlight NvimTreeFolderName guifg=#4EC9B0")
+-- -- NvimTree Opened Folder Name highlight
+-- vim.cmd("highlight NvimTreeOpenedFolderName guibg=#181818")
 
--- NvimTree Opened Folder Name highlight
-vim.cmd("highlight NvimTreeOpenedFolderName guifg=#4FC1FE")
+-- -- NvimTree Cursor Line highlight
+-- vim.cmd("highlight NvimTreeCursorLine guibg=#151515")
 
--- NvimTree Folder Icon highlight
-vim.cmd('highlight NvimTreeFolderIcon guifg=#a1a1a1')
 
--- NvimTree Indent Marker highlight
-vim.cmd('highlight NvimTreeIndentMarker guifg=#333333')
+-- -- NVIMTREE FOREGROUND HIGHLIGHTING --
+-- -- NvimTree Normal highlight
+-- vim.cmd [[hi NvimTreeNormal guifg=#FFFFFF]]
 
--- NvimTree Opened File highlight
-vim.cmd('highlight NvimTreeOpenedFile guifg=#CE9178')
+-- -- NvimTree Folder Name highlight
+-- vim.cmd("highlight NvimTreeFolderName guifg=#4EC9B0")
 
--- NvimTree Modified Files highlight
-vim.cmd('highlight NvimTreeModifiedFile guifg=#4EC9B0')
+-- -- NvimTree Opened Folder Name highlight
+-- vim.cmd("highlight NvimTreeOpenedFolderName guifg=#4FC1FE")
 
--- NvimTree Git Dirty highlight (modified fiels)
-vim.cmd('highlight NvimTreeGitDirty guifg=#3865BD')
+-- -- NvimTree Folder Icon highlight
+-- vim.cmd('highlight NvimTreeFolderIcon guifg=#a1a1a1')
+
+-- -- NvimTree Indent Marker highlight
+vim.cmd('highlight NvimTreeIndentMarker guifg=#222222')
+
+-- -- NvimTree Opened File highlight
+-- vim.cmd('highlight NvimTreeOpenedFile guifg=#CE9178')
+
+-- -- NvimTree Modified Files highlight
+-- vim.cmd('highlight NvimTreeModifiedFile guifg=#4EC9B0')
+
+-- -- NvimTree Git Dirty highlight (modified fiels)
+-- vim.cmd('highlight NvimTreeGitDirty guifg=#3865BD')
 
 
 -- ========================================
@@ -1761,52 +1821,247 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 
--- -- Neovim folds
--- -- leaderzo : open one fold
--- -- leaderzc : close one fold
--- -- leaderza : toggle one fold
--- local vim = vim
--- local api = vim.api
--- local M = {}
--- -- function to create a list of commands and convert them to autocommands
--- -------- This function is taken from https://github.com/norcalli/nvim_utils
--- function M.nvim_create_augroups(definitions)
--- 	for group_name, definition in pairs(definitions) do
--- 		api.nvim_command('augroup ' .. group_name)
--- 		api.nvim_command('autocmd!')
--- 		for _, def in ipairs(definition) do
--- 			local command = table.concat(vim.tbl_flatten { 'autocmd', def }, ' ')
--- 			api.nvim_command(command)
--- 		end
--- 		api.nvim_command('augroup END')
--- 	end
--- end
+-- ========================================
+-- # MY PERSONAL COLORSCHEME
+-- ========================================
+-- Function to set highlights
+local function set_highlights()
+	-- Used to highlight boolean values (true and false).
+	vim.api.nvim_set_hl(0, 'Boolean', { bg = 'NONE', fg = '#fafafa' })
 
--- local autoCommands = {
--- 	-- other autocommands
--- 	open_folds = {
--- 		{ "BufReadPost,FileReadPost", "*", "normal zR" }
--- 	}
--- }
+	-- Used to highlight character literals.
+	vim.api.nvim_set_hl(0, 'Character', { bg = 'NONE', fg = '#87afd7' })
 
--- M.nvim_create_augroups(autoCommands)
+	-- Used to highlight the column color in Neovim.
+	vim.api.nvim_set_hl(0, 'ColorColumn', { bg = '#000000', fg = '#fafafa' })
 
+	-- Used to highlight comments in the code.
+	vim.api.nvim_set_hl(0, 'Comment', { bg = 'NONE', fg = '#9e9e9e' })
 
--- -- Define a function to set colorscheme for specific filetypes
--- local function set_colorscheme_for_filetypes()
--- 	-- List of filetypes you want to set the colorscheme for
--- 	local filetypes = {
--- 		"lua",
--- 		"typescript",
--- 		-- Add more filetypes as needed
--- 	}
+	-- Used to highlight conditional statements (if, else, etc.).
+	vim.api.nvim_set_hl(0, 'Conditional', { bg = 'NONE', fg = '#006a6a' })
 
--- 	-- Loop through each filetype
--- 	for _, ft in ipairs(filetypes) do
--- 		vim.cmd(string.format("autocmd FileType %s colorscheme onedark", ft))
--- 		-- Replace <your_colorscheme> with the desired colorscheme name
--- 	end
--- end
+	-- Used to highlight constant values (numbers, constants, etc.).
+	vim.api.nvim_set_hl(0, 'Constant', { bg = 'NONE', fg = '#fcfcfc' })
 
--- -- Call the function to set the colorscheme for specified filetypes
--- set_colorscheme_for_filetypes()
+	-- Used to highlight the column where the cursor is located.
+	vim.api.nvim_set_hl(0, 'CursorColumn', { bg = '#444444', fg = 'NONE' })
+
+	-- Used to highlight the cursor itself.
+	vim.api.nvim_set_hl(0, 'Cursor', { bg = 'NONE', fg = 'NONE' })
+
+	-- Used to highlight the line where the cursor is located.
+	vim.api.nvim_set_hl(0, 'CursorLine', { bg = '#444444', bold = true })
+
+	-- Used to highlight debug statements or lines.
+	vim.api.nvim_set_hl(0, 'Debug', { bg = '#ffffff', fg = 'NONE' })
+
+	-- Used to highlight preprocessor definitions (like #define in C/C++).
+	vim.api.nvim_set_hl(0, 'Define', { bg = 'NONE', fg = '#ffffff' })
+
+	-- Used to highlight delimiters (like brackets, braces, commas, etc.).
+	vim.api.nvim_set_hl(0, 'Delimiter', { bg = 'NONE', fg = '#fafafa' })
+	-- vim.api.nvim_set_hl(0, 'Delimiter', { bg = 'NONE', fg = '#d75f87' })
+
+	-- Used to highlight lines that have been added in a diff view.
+	vim.api.nvim_set_hl(0, 'DiffAdd', { bg = 'NONE', fg = '#ffffff' })
+
+	-- Used to highlight lines that have been changed in a diff view.
+	vim.api.nvim_set_hl(0, 'DiffChange', { bg = 'NONE', fg = '#afffaf' })
+
+	-- Used to highlight lines that have been deleted in a diff view.
+	vim.api.nvim_set_hl(0, 'DiffDelete', { bg = 'NONE', fg = '#9e9e9e' })
+
+	-- Used to highlight the actual changed text within a line in a diff view.
+	vim.api.nvim_set_hl(0, 'DiffText', { bg = 'NONE', fg = '#fafafa' })
+
+	-- Used to highlight directories in file explorers like netrw or telescope.
+	vim.api.nvim_set_hl(0, 'Directory', { bg = 'NONE', fg = '#ffffff' })
+
+	-- Used to highlight error messages or error lines in the code.
+	vim.api.nvim_set_hl(0, 'Error', { bg = '#ff0000', fg = '#000000' })
+
+	-- Used to highlight error messages in the command line or pop-ups.
+	vim.api.nvim_set_hl(0, 'ErrorMsg', { bg = 'NONE', fg = '#ffffff' })
+
+	-- Used to highlight exception keywords (like try, catch, throw).
+	vim.api.nvim_set_hl(0, 'Exception', { bg = 'NONE', fg = '#fafafa' })
+
+	-- Used to highlight floating point numbers.
+	vim.api.nvim_set_hl(0, 'Float', { bg = 'NONE', fg = '#87af00' })
+
+	-- Used to highlight the fold column, which indicates fold levels.
+	vim.api.nvim_set_hl(0, 'FoldColumn', { bg = 'NONE', fg = '#87af00' })
+
+	-- Used to highlight folded text.
+	vim.api.nvim_set_hl(0, 'Folded', { bg = 'NONE', fg = '#87af00' })
+
+	-- Used to highlight function names and definitions.
+	vim.api.nvim_set_hl(0, 'Function', { bg = 'NONE', fg = '#fcfcfc' })
+
+	-- Used to highlight variable names and other identifiers.
+	vim.api.nvim_set_hl(0, 'Identifier', { bg = 'NONE', fg = '#9e9e9e' })
+
+	-- Used to highlight preprocessor includes and other include statements (e.g., #include in C/C++).
+	vim.api.nvim_set_hl(0, 'Include', { bg = 'NONE', fg = '#ffffff' })
+
+	-- Used to highlight the current match when searching incrementally.
+	vim.api.nvim_set_hl(0, 'IncSearch', { bg = '#ffffff', fg = '#000000' })
+
+	-- Used to highlight language keywords (e.g., if, else, while).
+	vim.api.nvim_set_hl(0, 'Keyword', { bg = 'NONE', fg = '#ffffff' })
+
+	-- Used to highlight labels (e.g., labels for goto statements in C).
+	vim.api.nvim_set_hl(0, 'Label', { bg = 'NONE', fg = '#ffffff' })
+
+	-- Used to highlight line numbers in the editor.
+	vim.api.nvim_set_hl(0, 'LineNr', { bg = '#e8e8e8', fg = '#f0f0f0' })
+
+	-- Used to highlight macros (e.g., #define in C).
+	vim.api.nvim_set_hl(0, 'Macro', { bg = 'NONE', fg = '#87af00' })
+
+	-- Used to highlight matching parentheses and brackets.
+	vim.api.nvim_set_hl(0, 'MatchParen', { bg = 'NONE', fg = '#464646' })
+
+	-- Used to highlight mode messages (e.g., when entering insert mode).
+	vim.api.nvim_set_hl(0, 'ModeMsg', { bg = 'NONE', fg = '#fafafa' })
+
+	-- Used to highlight messages when more text is available (e.g., in the command line).
+	vim.api.nvim_set_hl(0, 'MoreMsg', { bg = 'NONE', fg = '#fafafa' })
+
+	-- Used to highlight non-text characters (e.g., end-of-line markers).
+	vim.api.nvim_set_hl(0, 'NonText', { bg = 'NONE', fg = '#f0f0f0' })
+
+	-- Used to highlight normal text in the editor.
+	vim.api.nvim_set_hl(0, 'Normal', { bg = 'NONE', fg = '#ffffff' })
+
+	-- Used to highlight numeric constants.
+	vim.api.nvim_set_hl(0, 'Number', { bg = 'NONE', fg = '#ffffff' })
+
+	-- Used to highlight operators (e.g., +, -, *, /).
+	vim.api.nvim_set_hl(0, 'Operator', { bg = 'NONE', fg = '#5f87d7' })
+
+	-- Used to highlight the popup menu (completion menu).
+	vim.api.nvim_set_hl(0, 'Pmenu', { bg = 'NONE', fg = '#ffffff' })
+
+	-- Used to highlight the scrollbar in the popup menu.
+	vim.api.nvim_set_hl(0, 'PmenuSbar', { bg = 'NONE', fg = '#464646' })
+
+	-- Used to highlight the selected item in the popup menu.
+	vim.api.nvim_set_hl(0, 'PmenuSel', { bg = 'NONE', fg = '#006a6a' })
+
+	-- Used to highlight the thumb of the scrollbar in the popup menu.
+	vim.api.nvim_set_hl(0, 'PmenuThumb', { bg = 'NONE', fg = '#e8e8e8' })
+
+	-- Used to highlight preprocessor conditionals (e.g., #if, #ifdef).
+	vim.api.nvim_set_hl(0, 'PreCondit', { bg = 'NONE', fg = '#ffffff' })
+
+	-- Used to highlight preprocessor statements (e.g., #define, #include).
+	vim.api.nvim_set_hl(0, 'PreProc', { bg = 'NONE', fg = '#87af00' })
+
+	-- Used to highlight questions or prompts.
+	vim.api.nvim_set_hl(0, 'Question', { bg = 'NONE', fg = '#fafafa' })
+
+	-- Used to highlight repeat statements (for, while).
+	vim.api.nvim_set_hl(0, 'Repeat', { bg = 'NONE', fg = '#ffffff' })
+
+	-- Used to highlight search matches.
+	vim.api.nvim_set_hl(0, 'Search', { bg = '#006a6a', fg = '#000000' })
+
+	-- Used to highlight special characters.
+	vim.api.nvim_set_hl(0, 'SpecialChar', { bg = 'NONE', fg = '#ffffff' })
+
+	-- Used to highlight special comments (e.g., TODO comments).
+	vim.api.nvim_set_hl(0, 'SpecialComment', { bg = 'NONE', fg = '#fafafa' })
+
+	-- Used to highlight special items (like formatting characters).
+	vim.api.nvim_set_hl(0, 'Special', { bg = 'NONE', fg = '#ffffff' })
+
+	-- Used to highlight special keys (e.g., non-printable characters).
+	vim.api.nvim_set_hl(0, 'SpecialKey', { bg = 'NONE', fg = '#d75f87' })
+
+	-- Used to highlight misspelled words.
+	vim.api.nvim_set_hl(0, 'SpellBad', { bg = '#000000', fg = '#434343' })
+
+	-- Used to highlight words that are incorrectly capitalized.
+	vim.api.nvim_set_hl(0, 'SpellCap', { bg = 'NONE', fg = '#ffffff' })
+
+	-- Used to highlight words that are incorrect in the local context.
+	vim.api.nvim_set_hl(0, 'SpellLocal', { bg = 'NONE', fg = '#ffffff' })
+
+	-- Used to highlight rare words that may be misspelled.
+	vim.api.nvim_set_hl(0, 'SpellRare', { bg = 'NONE', fg = '#7c7c7c' })
+
+	-- Used to highlight statements (return, break, continue).
+	vim.api.nvim_set_hl(0, 'Statement', { bg = 'NONE', fg = '#e6e6e6' })
+
+	-- Used to highlight the status line of the current window.
+	vim.api.nvim_set_hl(0, 'StatusLine', { bg = '#ffffff', fg = '#000000' })
+
+	-- Used to highlight the status line of non-current windows.
+	vim.api.nvim_set_hl(0, 'StatusLineNC', { bg = '#eeeeee', fg = '#000000' })
+
+	-- Used to highlight storage class keywords (static, extern).
+	vim.api.nvim_set_hl(0, 'StorageClass', { bg = 'NONE', fg = '#ffffff' })
+
+	-- Used to highlight string literals.
+	-- vim.api.nvim_set_hl(0, 'String', { bg = 'NONE', fg = '#606060' })
+	vim.api.nvim_set_hl(0, 'String', { bg = 'NONE', fg = '#fafafa' })
+
+	-- Used to highlight structure names (e.g., struct in C).
+	vim.api.nvim_set_hl(0, 'Structure', { bg = 'NONE', fg = '#ffffff' })
+
+	-- Used to fill the background of the tabline.
+	vim.api.nvim_set_hl(0, 'TabLineFill', { bg = '#000000', fg = '#000000' })
+
+	-- Used to highlight tags (e.g., in HTML or XML).
+	-- vim.api.nvim_set_hl(0, 'Tag', { bg = 'NONE', fg = '#fafafa' })
+	vim.api.nvim_set_hl(0, 'Tag', { bg = 'NONE', fg = '#606060' })
+
+	-- Used to highlight titles (e.g., in Markdown or help files).
+	-- vim.api.nvim_set_hl(0, 'Title', { bg = 'NONE', fg = '#d78700' })
+
+	-- Used to highlight TODO comments.
+	vim.api.nvim_set_hl(0, 'Todo', { bg = 'NONE', fg = '#ffffff' })
+
+	-- Used to highlight type names (e.g., int, float in C).
+	vim.api.nvim_set_hl(0, 'Type', { bg = 'NONE', fg = '#7c7c7c' })
+
+	-- Used to highlight typedef statements in C/C++.
+	vim.api.nvim_set_hl(0, 'Typedef', { bg = 'NONE', fg = '#ffffff' })
+
+	-- Used to highlight the vertical split separator.
+	vim.api.nvim_set_hl(0, 'VertSplit', { bg = '#000000', fg = '#000000' })
+
+	-- Used to highlight the visual selection.
+	vim.api.nvim_set_hl(0, 'Visual', { bg = 'NONE', fg = '#008000' })
+
+	-- Used to highlight visual mode selections when the selection is not active.
+	vim.api.nvim_set_hl(0, 'VisualNOS', { bg = 'NONE', fg = '#464646' })
+
+	-- Used to highlight warning messages.
+	vim.api.nvim_set_hl(0, 'WarningMsg', { bg = 'NONE', fg = '#006a6a' })
+
+	-- Used to highlight the wild menu (command-line completion matches).
+	vim.api.nvim_set_hl(0, 'WildMenu', { bg = 'NONE', fg = '#f0f0f0' })
+
+	-- Define links
+	vim.api.nvim_set_hl(0, 'diffCommon', { link = 'Statement' })
+	vim.api.nvim_set_hl(0, 'diffRemoved', { link = 'DiffDelete' })
+	vim.api.nvim_set_hl(0, 'diffChanged', { link = 'DiffChange' })
+	vim.api.nvim_set_hl(0, 'diffAdded', { link = 'DiffAdd' })
+end
+
+-- Autocommand to apply highlights after colorscheme is set
+vim.api.nvim_create_autocmd("ColorScheme", {
+	pattern = "*",
+	callback = function()
+		set_highlights()
+	end
+})
+
+-- Set colorscheme name
+vim.g.colors_name = "A6"
+
+-- Call the highlight function
+set_highlights()
