@@ -1,4 +1,4 @@
--- Init Lua filE
+-- Init Lua file
 
 -- ========================================
 -- # CONFIGURE GLOBALS
@@ -41,21 +41,6 @@ vim.opt.runtimepath:prepend(lazypath)
 
 require("lazy").setup({
 	-- ## CONFIGURE COLORSCHEMES
-	-- Vydark
-	-- {
-	-- 	"vyshane/vydark-vim-color",
-	-- 	config = function()
-	-- 		vim.cmd [[colorscheme vydark]]
-	-- 	end
-	-- },
-
-	-- Monochrome
-	-- {
-	-- 	'kdheepak/monochrome.nvim',
-	-- 	config = function()
-	-- 		vim.cmd [[colorscheme monochrome]]
-	-- 	end
-	-- },
 
 	-- Vscode
 	-- {
@@ -65,7 +50,17 @@ require("lazy").setup({
 	-- 	config = function()
 	-- 		vim.cmd [[colorscheme vscode]]
 	-- 	end
-	-- },	
+	-- },
+
+	-- Catppuccin
+	{
+		"catppuccin/nvim",
+		name = "catppuccin",
+		priority = 1000,
+		config = function()
+			vim.cmd [[colorscheme catppuccin]]
+		end,
+	},
 
 	-- Arctic (vscode)
 	-- {
@@ -75,6 +70,14 @@ require("lazy").setup({
 	-- 	-- priority = 1000,
 	-- 	config = function()
 	-- 		vim.cmd [[colorscheme arctic]]
+	-- 	end
+	-- },
+
+	-- Monochrome
+	-- {
+	-- 	'kdheepak/monochrome.nvim',
+	-- 	config = function()
+	-- 		vim.cmd [[colorscheme monochrome]]
 	-- 	end
 	-- },
 
@@ -117,16 +120,6 @@ require("lazy").setup({
 	-- 	priority = 1000,
 	-- 	config = function()
 	-- 		vim.cmd [[colorscheme tokyonight]]
-	-- 	end,
-	-- },
-
-	-- Catppuccin
-	-- {
-	-- 	"catppuccin/nvim",
-	-- 	name = "catppuccin",
-	-- 	priority = 1000,
-	-- 	config = function()
-	-- 		vim.cmd [[colorscheme catppuccin]]
 	-- 	end,
 	-- },
 
@@ -359,21 +352,15 @@ require("lazy").setup({
 					settings = {
 						css = {
 							validate = true,
-							lint = {
-								unknownAtRules = "ignore",
-							},
+							lint = { unknownAtRules = "ignore", },
 						},
 						scss = {
 							validate = true,
-							lint = {
-								unknownAtRules = "ignore",
-							},
+							lint = { unknownAtRules = "ignore", },
 						},
 						less = {
 							validate = true,
-							lint = {
-								unknownAtRules = "ignore",
-							},
+							lint = { unknownAtRules = "ignore", },
 						},
 					},
 				},
@@ -394,21 +381,15 @@ require("lazy").setup({
 					settings = {
 						css = {
 							validate = true,
-							lint = {
-								unknownAtRules = "ignore",
-							},
+							lint = { unknownAtRules = "ignore", },
 						},
 						scss = {
 							validate = true,
-							lint = {
-								unknownAtRules = "ignore",
-							},
+							lint = { unknownAtRules = "ignore", },
 						},
 						less = {
 							validate = true,
-							lint = {
-								unknownAtRules = "ignore",
-							},
+							lint = { unknownAtRules = "ignore", },
 						},
 					},
 				},
@@ -422,6 +403,16 @@ require("lazy").setup({
 						"typescriptreact",
 						"typescript.tsx",
 					},
+
+					-- -- In combination with trouble plugin to show diagnostics in a floating window
+					-- on_attach = function(bufnr)
+					-- 	vim.api.nvim_create_autocmd('CursorHold', {
+					-- 		buffer = bufnr,
+					-- 		callback = function()
+					-- 			vim.diagnostic.open_float(nil, { focusable = false })
+					-- 		end
+					-- 	})
+					-- end
 				},
 				vimls = {},
 			}
@@ -629,18 +620,22 @@ require("lazy").setup({
 				}),
 				sources = {
 					{ name = "nvim_lsp" },
-					{ name = "codeium" },
 					{ name = "luasnip" },
+					{ name = "supermaven" }, -- Autocompletion copilot
+					-- { name = "codeium" }, -- Autocompletion copilot
 					{ name = "path" },
 					{ name = "buffer", },
 				},
 				-- formatting = {
-				-- 	format = require('lspkind').cmp_format({
-				-- 		mode = "symbol",
-				-- 		maxwidth = 50,
-				-- 		ellipsis_char = '...',
-				-- 		symbol_map = { Codeium = "", }
-				-- 	})
+				-- format = require('lspkind').cmp_format({
+				-- mode = "symbol",
+				-- maxwidth = 50,
+				-- ellipsis_char = '...',
+				-- symbol_map = {
+				-- Codeium = "",
+				-- Supermaven = "",
+				-- }
+				-- })
 				-- }
 			})
 		end,
@@ -719,39 +714,39 @@ require("lazy").setup({
 	{
 		"folke/trouble.nvim",
 		dependencies = "nvim-tree/nvim-web-devicons",
-		opts = {},
 		config = function()
-			local trouble = require("trouble")
+			require("trouble").setup({
+				position = "bottom", -- position of the list can be: bottom, top, left, right
+				height = 20,     -- height of the trouble list when position is top or bottom
+				width = 50,      -- width of the list when position is left or right
+			})
+			vim.api.nvim_set_keymap("n", "<leader>xx", "<cmd>Trouble<cr>",
+				{ silent = true, noremap = true }
+			)
+			vim.api.nvim_set_keymap("n", "<leader>xw", "<cmd>Trouble workspace_diagnostics<cr>",
+				{ silent = true, noremap = true }
+			)
+			vim.api.nvim_set_keymap("n", "<leader>xd", "<cmd>Trouble document_diagnostics<cr>",
+				{ silent = true, noremap = true }
+			)
+			vim.api.nvim_set_keymap("n", "<leader>xl", "<cmd>Trouble loclist<cr>",
+				{ silent = true, noremap = true }
+			)
+			vim.api.nvim_set_keymap("n", "<leader>xf", "<cmd>Trouble quickfix<cr>",
+				{ silent = true, noremap = true }
+			)
+			vim.api.nvim_set_keymap("n", "gR", "<cmd>Trouble lsp_references<cr>",
+				{ silent = true, noremap = true }
+			)
 
-			-- Key mapping to open trouble
-			vim.keymap.set("n", "<leader>xx", function()
-				trouble.open()
-			end)
-
-			-- Key mapping to open workspace diagnostics
-			vim.keymap.set("n", "<leader>xw", function()
-				trouble.open("workspace_diagnostics")
-			end)
-
-			-- Key mapping to open document diagnostics
-			vim.keymap.set("n", "<leader>xd", function()
-				trouble.open("document_diagnostics")
-			end)
-
-			-- Key mapping to open quickfix
-			vim.keymap.set("n", "<leader>xf", function()
-				trouble.open("quickfix")
-			end)
-
-			-- Key mapping to open location list
-			vim.keymap.set("n", "<leader>xl", function()
-				trouble.open("loclist")
-			end)
-
-			-- Key mapping to open LSP references
-			vim.keymap.set("n", "gR", function()
-				trouble.open("lsp_references")
-			end)
+			-- -- -- Key mapping to show diagnostics in a floating window with custom size
+			-- -- vim.keymap.set('n', '<leader>xd', function()
+			-- -- 	vim.diagnostic.open_float(nil, {
+			-- -- 		width = 80,
+			-- -- 		height = 20,
+			-- -- 		border = 'rounded'
+			-- -- 	})
+			-- -- end)
 		end,
 	},
 
@@ -1279,18 +1274,18 @@ require("lazy").setup({
 
 
 	-- // Lsp_lines
-	{
-		-- Shows errors
-		"https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-		config = function()
-			require("lsp_lines").setup()
+	-- {
+	-- 	-- Shows errors
+	-- 	"https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+	-- 	config = function()
+	-- 		require("lsp_lines").setup()
 
-			-- Disable virtual_text since it's redundant due to lsp_lines.
-			vim.diagnostic.config({
-				virtual_text = false,
-			})
-		end,
-	},
+	-- 		-- Disable virtual_text since it's redundant due to lsp_lines.
+	-- 		vim.diagnostic.config({
+	-- 			virtual_text = false,
+	-- 		})
+	-- 	end,
+	-- },
 
 
 	-- // Chatgpt
@@ -1578,7 +1573,7 @@ require("lazy").setup({
 			vim.cmd [[highlight Headline1 guifg=#d78700]]
 			vim.cmd [[highlight Headline2 guifg=#87afff]]
 			vim.cmd [[highlight Headline3 guifg=#d75f87]]
-			vim.cmd [[highlight CodeBlock guibg=#101010]]
+			vim.cmd [[highlight CodeBlock guibg=#202020]]
 
 			require("headlines").setup {
 				markdown = {
@@ -1591,12 +1586,28 @@ require("lazy").setup({
 	},
 
 
-	-- // Harpoon
-	-- {
-	-- 	"ThePrimeagen/harpoon",
-	-- 	branch = "harpoon2",
-	-- 	requires = { { "nvim-lua/plenary.nvim" } },
-	-- },
+	-- // Prettier Typescript Error Translator
+	{
+		'dmmulroy/ts-error-translator.nvim',
+		config = function()
+			require("ts-error-translator").setup()
+		end
+	},
+
+
+	-- // Autocompletion copilot
+	{
+		"supermaven-inc/supermaven-nvim",
+		config = function()
+			require("supermaven-nvim").setup({
+				keymaps = {
+					accept_suggestion = "<Tab>",
+					clear_suggestion = "<C-]>",
+					accept_word = "<C-j>",
+				},
+			})
+		end,
+	},
 
 
 	-- LASTPLUGIN
@@ -1762,8 +1773,8 @@ vim.api.nvim_set_keymap('x', '<leader>l', [["adiconsole.log(<C-R>a<Esc>]], { nor
 vim.api.nvim_set_hl(0, "IndentBlanklineChar", { fg = "#333333" })
 
 -- -- Comment highlight
--- vim.api.nvim_set_hl(0, "Comment", { fg = "#555555" })
--- vim.api.nvim_set_hl(0, "@comment", { link = "Comment" })
+vim.api.nvim_set_hl(0, "Comment", { fg = "#555555" })
+vim.api.nvim_set_hl(0, "@comment", { link = "Comment" })
 
 -- -- Line Number highlight
 -- vim.api.nvim_set_hl(0, "LineNr", { fg = "#666666" })
@@ -1836,7 +1847,7 @@ local function set_highlights()
 	vim.api.nvim_set_hl(0, 'ColorColumn', { bg = '#000000', fg = '#fafafa' })
 
 	-- Used to highlight comments in the code.
-	vim.api.nvim_set_hl(0, 'Comment', { bg = 'NONE', fg = '#9e9e9e' })
+	vim.api.nvim_set_hl(0, 'Comment', { bg = 'NONE', fg = '#606060' })
 
 	-- Used to highlight conditional statements (if, else, etc.).
 	vim.api.nvim_set_hl(0, 'Conditional', { bg = 'NONE', fg = '#006a6a' })
@@ -1885,7 +1896,7 @@ local function set_highlights()
 	vim.api.nvim_set_hl(0, 'ErrorMsg', { bg = 'NONE', fg = '#ffffff' })
 
 	-- Used to highlight exception keywords (like try, catch, throw).
-	vim.api.nvim_set_hl(0, 'Exception', { bg = 'NONE', fg = '#fafafa' })
+	vim.api.nvim_set_hl(0, 'Exception', { bg = 'NONE', fg = '#006a6a' })
 
 	-- Used to highlight floating point numbers.
 	vim.api.nvim_set_hl(0, 'Float', { bg = 'NONE', fg = '#87af00' })
@@ -2016,7 +2027,7 @@ local function set_highlights()
 
 	-- Used to highlight tags (e.g., in HTML or XML).
 	-- vim.api.nvim_set_hl(0, 'Tag', { bg = 'NONE', fg = '#fafafa' })
-	vim.api.nvim_set_hl(0, 'Tag', { bg = 'NONE', fg = '#606060' })
+	vim.api.nvim_set_hl(0, 'Tag', { bg = 'NONE', fg = '#9e9e9e' })
 
 	-- Used to highlight titles (e.g., in Markdown or help files).
 	-- vim.api.nvim_set_hl(0, 'Title', { bg = 'NONE', fg = '#d78700' })
@@ -2064,4 +2075,4 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 vim.g.colors_name = "A6"
 
 -- Call the highlight function
-set_highlights()
+-- set_highlights()
