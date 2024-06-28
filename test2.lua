@@ -26,9 +26,6 @@ vim.keymap.set("n", "Q", "<nop>")
 -- Toggle between previous file and current file
 vim.keymap.set("n", "<leader>.", "<c-^>")
 
--- Vim Fugitive
-vim.keymap.set("n", "<leader>gg", ":Git<cr>")
-
 -- Swap between last two buffers
 vim.keymap.set("n", "<leader>'", "<C-^>", { desc = "Switch to last buffer", noremap = true, silent = true })
 
@@ -46,11 +43,8 @@ vim.keymap.set("n", "H", "^", { noremap = true, silent = true })
 -- Turn off highlighted results
 vim.keymap.set("n", "<leader>nh", "<cmd>noh<cr>", { noremap = true, silent = true })
 
--- Toggle undotree
-vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
-
-
 -- Diagnostics
+
 -- Open the diagnostic under the cursor in a float window
 vim.keymap.set("n", "<leader>d", function()
   vim.diagnostic.open_float({
@@ -162,7 +156,7 @@ vim.keymap.set("n", "<leader>tn", function()
   require("neotest").run.run()
 end, { desc = "[T]est [N]earest", noremap = true, silent = true })
 
-vim.keymap.set("n", "<leader>tt", function()
+vim.keymap.set("n", "<leader>td", function()
   require("neotest").run.run({ strategy = "dap" })
 end, { desc = "[T]est with [D]ebugger", noremap = true, silent = true })
 
@@ -177,65 +171,6 @@ end, { desc = "[T]est [O]utput", noremap = true, silent = true })
 vim.keymap.set("n", "<leader>tp", function()
   require("neotest").output_panel.toggle()
 end, { desc = "[T]est [P]anel", noremap = true, silent = true })
-
-
--- Window + better kitty navigation
-vim.keymap.set("n", "<C-j>", function()
-  if vim.fn.exists(":KittyNavigateDown") ~= 0 and TERM == "xterm-kitty" then
-    vim.cmd.KittyNavigateDown()
-  elseif vim.fn.exists(":NvimTmuxNavigateDown") ~= 0 then
-    vim.cmd.NvimTmuxNavigateDown()
-  else
-    vim.cmd.wincmd("j")
-  end
-end, { noremap = true, silent = true })
-
-vim.keymap.set("n", "<C-k>", function()
-  if vim.fn.exists(":KittyNavigateUp") ~= 0 and TERM == "xterm-kitty" then
-    vim.cmd.KittyNavigateUp()
-  elseif vim.fn.exists(":NvimTmuxNavigateUp") ~= 0 then
-    vim.cmd.NvimTmuxNavigateUp()
-  else
-    vim.cmd.wincmd("k")
-  end
-end, { noremap = true, silent = true })
-
-vim.keymap.set("n", "<C-l>", function()
-  if vim.fn.exists(":KittyNavigateRight") ~= 0 and TERM == "xterm-kitty" then
-    vim.cmd.KittyNavigateRight()
-  elseif vim.fn.exists(":NvimTmuxNavigateRight") ~= 0 then
-    vim.cmd.NvimTmuxNavigateRight()
-  else
-    vim.cmd.wincmd("l")
-  end
-end, { noremap = true, silent = true })
-
-vim.keymap.set("n", "<C-h>", function()
-  if vim.fn.exists(":KittyNavigateLeft") ~= 0 and TERM == "xterm-kitty" then
-    vim.cmd.KittyNavigateLeft()
-  elseif vim.fn.exists(":NvimTmuxNavigateLeft") ~= 0 then
-    vim.cmd.NvimTmuxNavigateLeft()
-  else
-    vim.cmd.wincmd("h")
-  end
-end, { noremap = true, silent = true })
-
-
--- Center buffer while navigating
-vim.keymap.set("n", "<C-u>", "<C-u>zz", { noremap = true, silent = true })
-vim.keymap.set("n", "<C-d>", "<C-d>zz", { noremap = true, silent = true })
-vim.keymap.set("n", "{", "{zz", { noremap = true, silent = true })
-vim.keymap.set("n", "}", "}zz", { noremap = true, silent = true })
-vim.keymap.set("n", "N", "Nzz", { noremap = true, silent = true })
-vim.keymap.set("n", "n", "nzz", { noremap = true, silent = true })
-vim.keymap.set("n", "G", "Gzz", { noremap = true, silent = true })
-vim.keymap.set("n", "gg", "ggzz", { noremap = true, silent = true })
-vim.keymap.set("n", "<C-i>", "<C-i>zz", { noremap = true, silent = true })
-vim.keymap.set("n", "<C-o>", "<C-o>zz", { noremap = true, silent = true })
-vim.keymap.set("n", "%", "%zz", { noremap = true, silent = true })
-vim.keymap.set("n", "*", "*zz", { noremap = true, silent = true })
-vim.keymap.set("n", "#", "#zz", { noremap = true, silent = true })
-
 
 
 -- ========================================
@@ -900,7 +835,7 @@ require("lazy").setup({
           dotfiles = false,
         },
       })
-      vim.keymap.set("n", "<leader>t", ":NvimTreeToggle<CR>", { desc = "Open Nvim Tree" })
+      vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>", { desc = "Open Nvim Tree" })
     end,
   },
 
@@ -918,7 +853,7 @@ require("lazy").setup({
       -- stylua: ignore
       local colors = {
         -- bg       = '#202328',
-        bg       = '#191919',
+        bg       = '#131313',
         fg       = '#bbc2cf',
         yellow   = '#ECBE7B',
         cyan     = '#008080',
@@ -1216,8 +1151,6 @@ require("lazy").setup({
         end,
       },
     },
-
-
     config = function()
       require("telescope").setup({
         defaults = {
@@ -1489,53 +1422,51 @@ require("lazy").setup({
   -- <> Trouble
   {
     "folke/trouble.nvim",
-    opts = {}, -- for default options, refer to the configuration section for custom setup.
-    cmd = "Trouble",
-    keys = {
-      {
-        "<leader>xx",
-        "<cmd>Trouble diagnostics toggle<cr>",
-        desc = "Diagnostics (Trouble)",
-      },
-      {
+    dependencies = "nvim-tree/nvim-web-devicons",
+    config = function()
+      require("trouble").setup({
+        position = "bottom", -- position of the list can be: bottom, top, left, right
+        height = 20,         -- height of the trouble list when position is top or bottom
+        width = 50,          -- width of the list when position is left or right
+      })
+      vim.api.nvim_set_keymap("n", "<leader>xx", "<cmd>Trouble<cr>", { silent = true, noremap = true })
+      vim.api.nvim_set_keymap(
+        "n",
+        "<leader>xw",
+        "<cmd>Trouble workspace_diagnostics<cr>",
+        { silent = true, noremap = true }
+      )
+      vim.api.nvim_set_keymap(
+        "n",
         "<leader>xd",
-        "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
-        desc = "Buffer Diagnostics (Trouble)",
-      },
-      {
-        "<leader>cs",
-        "<cmd>Trouble symbols toggle focus=false<cr>",
-        desc = "Symbols (Trouble)",
-      },
-      {
-        "<leader>cl",
-        "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
-        desc = "LSP Definitions / references / ... (Trouble)",
-      },
-      {
-        "<leader>xL",
-        "<cmd>Trouble loclist toggle<cr>",
-        desc = "Location List (Trouble)",
-      },
-      {
-        "<leader>xQ",
-        "<cmd>Trouble qflist toggle<cr>",
-        desc = "Quickfix List (Trouble)",
-      },
-    },
+        "<cmd>Trouble document_diagnostics<cr>",
+        { silent = true, noremap = true }
+      )
+      vim.api.nvim_set_keymap("n", "<leader>xl", "<cmd>Trouble loclist<cr>", { silent = true, noremap = true })
+      vim.api.nvim_set_keymap("n", "<leader>xf", "<cmd>Trouble quickfix<cr>", { silent = true, noremap = true })
+      vim.api.nvim_set_keymap("n", "gR", "<cmd>Trouble lsp_references<cr>", { silent = true, noremap = true })
+
+      -- -- -- Key mapping to show diagnostics in a floating window with custom size
+      -- -- vim.keymap.set('n', '<leader>xd', function()
+      -- -- 	vim.diagnostic.open_float(nil, {
+      -- -- 		width = 80,
+      -- -- 		height = 20,
+      -- -- 		border = 'rounded'
+      -- -- 	})
+      -- -- end)
+    end,
   },
 
 
-  -- <> Vim Fugitive
   -- Git wrapper for vim
   { "tpope/vim-fugitive" },
-  -- <> Github extension to fugitive
+  -- Github extension to fugitive
   { "tpope/vim-rhubarb" },
 
-  -- <> Detect tabstop and shiftwidth automatically
+  -- Detect tabstop and shiftwidth automatically
   { "tpope/vim-sleuth" },
 
-  -- <> Gitsigns
+  -- Gitsigns
   {
     -- Plugin for git related signs and utilities
     "lewis6991/gitsigns.nvim",

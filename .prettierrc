@@ -1,10 +1,5 @@
 {
-  "arrowParens": "always",
-  "bracketSameLine": true,
-  "bracketSpacing": true,
-  "printWidth": 160,
   "semi": false,
-  "singleAttributePerLine": false,
   "singleQuote": true,
-  "trailingComma": "all"
+  "printWidth": 200
 }
